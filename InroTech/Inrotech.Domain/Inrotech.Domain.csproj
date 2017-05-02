@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Components\Grahps\" />
-    <Folder Include="Components\DataManagement\" />
     <Folder Include="Components\Video\" />
   </ItemGroup>
 
