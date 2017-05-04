@@ -4,7 +4,7 @@ namespace Inrotech.Domain
 {
     public class Test
     {
-        //For testing 
+        //For testing.
         static void Main(string[] args)
         {
 
