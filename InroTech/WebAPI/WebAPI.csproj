@@ -17,7 +17,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Inrotech.Domain\Inrotech.Domain.csproj" />
+    <ProjectReference Include="..\WebApplication1.netFramework\WebApplication1.netFramework.csproj" />
   </ItemGroup>
 
 </Project>

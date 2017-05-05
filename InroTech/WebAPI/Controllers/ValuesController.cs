@@ -15,14 +15,19 @@ namespace WebAPI.Controllers
         {
             var dict = new Dictionary<string, DateTime>();
             dict.Add("now", DateTime.Now);
+            dict.Add("won", DateTime.Now.AddYears(1));
             return dict;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Dictionary<string,int> Get(int id)
         {
-            return "value";
+            var dict = new Dictionary<string, int>();
+            dict.Add("now", id);
+            dict.Add("won", id+10);
+            return dict;
+            //return "value";
         }
 
         // POST api/values
