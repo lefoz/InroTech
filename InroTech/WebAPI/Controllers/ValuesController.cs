@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Inrotech.Domain;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        public static Inrotech.Domain.Components.Graphs.tal_test tal = new Inrotech.Domain.Components.Graphs.tal_test();
         // GET api/values
         [HttpGet]
-        public Dictionary<string, DateTime> Get()
+        public Dictionary<string, int> Get()
         {
-            var dict = new Dictionary<string, DateTime>();
-            dict.Add("now", DateTime.Now);
+            tal.inc_tal();
+            var dict = new Dictionary<string, int>();
+            dict.Add("x", tal.getTal());
             return dict;
         }
 

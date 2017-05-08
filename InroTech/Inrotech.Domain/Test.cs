@@ -1,4 +1,5 @@
 ﻿using System;
+using Inrotech.Domain.Components.Graphs;
 
 namespace Inrotech.Domain
 {
@@ -7,8 +8,7 @@ namespace Inrotech.Domain
         //For testing.
         static void Main(string[] args)
         {
-
         }
 
+        }
     }
-}
