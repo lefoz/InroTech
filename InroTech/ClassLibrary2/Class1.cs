@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace WebAPI.Helpers
+namespace ClassLibrary2
 {
-    public class MeassurementHelper
+    public class Class1
     {
-        public MeassurementHelper()
-        {
-            name = "ole bole";
-        }
         public string name { get; set; }
     }
 }
