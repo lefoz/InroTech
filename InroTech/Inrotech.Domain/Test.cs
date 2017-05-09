@@ -1,15 +1,14 @@
 ﻿using System;
+using Inrotech.Domain.Components.Graphs;
 
 namespace Inrotech.Domain
 {
     public class Test
     {
-        DataTable dt = new DataTable();
-        //For testing 
+        //For testing.
         static void Main(string[] args)
         {
-
         }
 
+        }
     }
-}

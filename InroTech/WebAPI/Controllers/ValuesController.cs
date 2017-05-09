@@ -3,49 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Helpers;
-
-
+using Inrotech.Domain;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        MeassurementHelper _mess = new MeassurementHelper();
-
-        //https://channel9.msdn.com/Blogs/ASP-NET-Site-Videos/aspnet-web-api
+        public static Inrotech.Domain.Components.Graphs.tal_test tal = new Inrotech.Domain.Components.Graphs.tal_test();
         // GET api/values
         [HttpGet]
-        public Dictionary<string, DateTime> Get()
+        public Dictionary<string, int> Get()
         {
-            var dict = new Dictionary<string, DateTime>();
-            dict.Add("now", DateTime.Now);
-            dict.Add("won", DateTime.Now.AddYears(1));
+            tal.inc_tal();
+            var dict = new Dictionary<string, int>();
+            dict.Add("x", tal.getTal());
             return dict;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public String Get(int id)
+        public string Get(int id)
         {
-            var name = _mess.name;
-
-            return name;
+            return "value";
         }
 
         // POST api/values
         [HttpPost]
-        public bool Post([FromBody]string value)
+        public void Post([FromBody]string value)
         {
-            return true;
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
-            
         }
 
         // DELETE api/values/5
