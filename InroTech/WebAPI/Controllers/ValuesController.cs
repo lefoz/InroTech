@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Inrotech.Domain;
+using Inrotech.Domain.Graph;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private Sim_Graph SG = new Sim_Graph();
+
         // GET api/values
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            tal.inc_tal();
             var dict = new Dictionary<string, int>();
-            dict.Add("x", tal.getTal());
+            dict.Add("x", SG.GetSim_Graph());
             return dict;
         }
 

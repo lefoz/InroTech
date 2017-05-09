@@ -13,12 +13,5 @@ namespace Inrotech.Domain.Graph
             //get The data! ** 
             
         }
-        
-
-        public int SimulateData()
-        {
-
-            return this.data;
-        }
     }
 }
