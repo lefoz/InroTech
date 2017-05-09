@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using Inrotech.Domain.Graph;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
