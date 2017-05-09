@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Inrotech.Domain;
+
 
 namespace WebAPI.Controllers
 {
@@ -12,13 +12,13 @@ namespace WebAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public Dictionary<string, int> Get()
-        {
-            tal.inc_tal();
-            var dict = new Dictionary<string, int>();
-            dict.Add("x", tal.getTal());
-            return dict;
-        }
+        //public Dictionary<string, int> Get()
+        //{
+        //    tal.inc_tal();
+        //    var dict = new Dictionary<string, int>();
+        //    dict.Add("x", tal.getTal());
+        //    return dict;
+        //}
 
         // GET api/values/5
         [HttpGet("{id}")]
