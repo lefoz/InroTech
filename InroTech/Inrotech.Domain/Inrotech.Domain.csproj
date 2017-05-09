@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Video\" />
+    <Folder Include="Register\" />
+    <Folder Include="Video\" />
   </ItemGroup>
 
 </Project>

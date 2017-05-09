@@ -10,7 +10,6 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        public static Inrotech.Domain.Components.Graphs.tal_test tal = new Inrotech.Domain.Components.Graphs.tal_test();
         // GET api/values
         [HttpGet]
         public Dictionary<string, int> Get()
