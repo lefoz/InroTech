@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using Inrotech.Domain.Graph;
+using Inrotech.Domain.Register;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -8,6 +10,8 @@ namespace WebAPI.Controllers
     public class ValuesController : Controller
     {
         private Sim_Graph SG = new Sim_Graph();
+        private Sim_Register SR = new Sim_Register();
+        
 
         // GET api/values
         [HttpGet]
@@ -18,12 +22,26 @@ namespace WebAPI.Controllers
             return dict;
         }
 
-        // GET api/values/5
+        // GET api/values/#
         [HttpGet("{id}")]
-        public string Get(int id)
+        public DataTable Get(int id)
         {
-            return "value";
+            DataTable simDt;
+            switch (id)
+            {
+                case 1: simDt = SR.GetSimReg();
+                      break;
+                case 2:
+                     simDt = SR.GetSelectedReg();
+                    break;
+                default:
+                     simDt = SR.GetSimReg();
+                   break;
+            }
+            return simDt;
         }
+
+        
 
         // POST api/values
         [HttpPost]
