@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Inrotech.Domain.Register;
 namespace Inrotech.Domain.Register
@@ -50,5 +51,19 @@ namespace Inrotech.Domain.Register
             }
             return SimRegSelected;
         }
+
+        public string[] GetAllReg()
+        {
+            
+            DataTable old = GetSimReg();
+            var regList = new List<string>();
+            foreach (DataRow row in old.Rows)
+            {
+              regList.Add(row["Registry"].ToString());   
+            }
+            var regArray = regList.ToArray();
+
+            return regArray;
+        } 
     }
 }

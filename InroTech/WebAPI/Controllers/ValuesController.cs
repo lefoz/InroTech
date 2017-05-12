@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Reflection.Metadata.Ecma335;
 using Inrotech.Domain.Graph;
 using Inrotech.Domain.Register;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace WebAPI.Controllers
     {
         private Sim_Graph SG = new Sim_Graph();
         private Sim_Register SR = new Sim_Register();
-        
+        private string[] simRegArray;
 
         // GET api/values
         [HttpGet]
@@ -29,20 +30,31 @@ namespace WebAPI.Controllers
             DataTable simDt;
             switch (id)
             {
-                case 1: simDt = SR.GetSimReg();
-                      break;
-                case 2:
-                     simDt = SR.GetSelectedReg();
+                case 1: simDt = SR.GetSimReg();//DataTable
                     break;
-                default:
-                     simDt = SR.GetSimReg();
-                   break;
+                case 2:
+                    simDt = SR.GetSelectedReg();//DataTable
+                    break;
+               default:
+                    simDt = new DataTable();
+                    break;
             }
             return simDt;
         }
 
+        [HttpGet("getarray/{id}")]
+        public string[] GetValues(int id)
+        {
+            switch (id)
+            {
+                case 1: simRegArray = SR.GetAllReg();
+                        break;
+                default: simRegArray = new [] {"Fault"};
+                    break;
+            }
+            return simRegArray;
+        }
         
-
         // POST api/values
         [HttpPost]
         public void Post([FromBody]string value)
