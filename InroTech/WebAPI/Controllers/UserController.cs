@@ -19,10 +19,11 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{user}", Name = "Get")]
+        public string Get(Dictionary<string, string> dict)
         {
-            return "value";
+            var _dict = new Dictionary<string, string>();
+            return "user value: "+dict.Keys+dict.Values;
         }
         
         // POST: api/User
