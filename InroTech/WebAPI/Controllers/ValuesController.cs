@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
         }
 
 
-        // POST api/values
+        // POST api/values/name=ole
         [HttpPost]
         public void Post([FromBody]string value)
         {
@@ -45,10 +45,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
-    //         private static DbConnector DbConnectorInstance;
-    //    private const String ConnectorString = @"server=mysql45.unoeuro.com;Port=3306;userid=kasper_mad_com;
-    //password=Gruppe3;database=kasper_madsen_com_db";
-    //    MySqlConnection conn;
+   
 
 
     }
