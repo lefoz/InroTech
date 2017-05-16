@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Data;
+using System.Reflection.Metadata.Ecma335;
 using Inrotech.Domain.Graph;
+using Inrotech.Domain.Register;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -8,6 +11,8 @@ namespace WebAPI.Controllers
     public class ValuesController : Controller
     {
         private Sim_Graph SG = new Sim_Graph();
+        private Sim_Register SR = new Sim_Register();
+        private string[] simRegArray;
 
         // GET api/values
         [HttpGet]
@@ -18,40 +23,52 @@ namespace WebAPI.Controllers
             return dict;
         }
 
-        // GET api/values/5
+        // GET api/values/#
         [HttpGet("{id}")]
-        public string Get(int id)
+        public DataTable Get(int id)
         {
-            return "value "+id;
-        }
-        //http://nodogmablog.bryanhogan.net/2016/01/asp-net-5-web-api-controller-with-multiple-get-methods/
-        //http://stackoverflow.com/questions/38109927/optional-int-parameter-in-web-api-attribute-routing
-        // GET api/values/5
-        [HttpGet("getmyvalues/{id}")]
-        public string GetValues(int id)
-        {
-            return "my value: "+id;
+            DataTable simDt;
+            switch (id)
+            {
+                case 1: simDt = SR.GetSimReg();//DataTable
+                    break;
+                case 2:
+                    simDt = SR.GetSelectedReg();//DataTable
+                    break;
+               default:
+                    simDt = new DataTable();
+                    break;
+            }
+            return simDt;
         }
 
-
-        // POST api/values/name=ole
+        [HttpGet("getarray/{id}")]
+        public string[] GetValues(int id)
+        {
+            switch (id)
+            {
+                case 1: simRegArray = SR.GetAllReg();
+                        break;
+                default: simRegArray = new [] {"Fault"};
+                    break;
+            }
+            return simRegArray;
+        }
+        
+        // POST api/values
         [HttpPost]
         public void Post([FromBody]string value)
         {
-            System.Console.WriteLine("my value; value");
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
-   
+        }
 
-
-    }
-
-    // DELETE api/values/5
-    [HttpDelete("{id}")]
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
         public void Delete(int id)
         {
         }
