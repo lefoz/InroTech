@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using Inrotech.Domain.Graph;
 using Inrotech.Domain.Register;
@@ -12,7 +14,8 @@ namespace WebAPI.Controllers
     {
         private Sim_Graph SG = new Sim_Graph();
         private Sim_Register SR = new Sim_Register();
-        private string[] simRegArray;
+        private string[] simFullRegArray;
+        private string[] simSelRegArray = {"025", "055"};
 
         // GET api/values
         [HttpGet]
@@ -33,9 +36,9 @@ namespace WebAPI.Controllers
                 case 1: simDt = SR.GetSimReg();//DataTable
                     break;
                 case 2:
-                    simDt = SR.GetSelectedReg();//DataTable
+                    simDt = SR.GetSelectedReg(simSelRegArray);//DataTable
                     break;
-               default:
+                default:
                     simDt = new DataTable();
                     break;
             }
@@ -47,24 +50,44 @@ namespace WebAPI.Controllers
         {
             switch (id)
             {
-                case 1: simRegArray = SR.GetAllReg();
+                case 1: simFullRegArray = SR.GetAllReg();
                         break;
-                default: simRegArray = new [] {"Fault"};
+                default: simFullRegArray = new [] {"Fault"};
                     break;
             }
-            return simRegArray;
+            return simFullRegArray;
         }
         
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+        // POST api/values/#
+        [HttpPost()]
+        public void Post(string[] values)
         {
+            
+            if (values != null)
+            {
+                
+                //simSelRegArray = values;
+
+
+            }
+           
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]string[] value)
         {
+            //switch (id)
+            //{
+            //    case 1:
+            //        simSelRegArray = value;
+            //        foreach (var item in simSelRegArray)
+            //        {
+            //            Console.WriteLine(item.ToString());
+            //        }
+            //        break;
+            //}
+            
         }
 
         // DELETE api/values/5
