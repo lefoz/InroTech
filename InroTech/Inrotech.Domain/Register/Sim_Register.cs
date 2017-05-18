@@ -84,6 +84,14 @@ namespace Inrotech.Domain.Register
             var regArray = regList.ToArray();
 
             return regArray;
-        } 
+        }
+
+        public void RegArrayTester(string[] test)
+        {
+            foreach (var item in test)
+            {
+                Console.WriteLine(item);
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
         private Sim_Graph SG = new Sim_Graph();
         private Sim_Register SR = new Sim_Register();
         private string[] simFullRegArray;
-        private string[] simSelRegArray = {"025", "055"};
+        private static string[] simSelRegArray; //= {"025", "055"};
 
         // GET api/values
         [HttpGet]
@@ -59,14 +59,14 @@ namespace WebAPI.Controllers
         }
         
         // POST api/values/#
-        [HttpPost()]
-        public void Post(string[] values)
+        [HttpPost]
+        public void Post([FromBody]string[] values)
         {
             
             if (values != null)
             {
-                
-                //simSelRegArray = values;
+                //SR.RegArrayTester(values);
+                simSelRegArray = values;
 
 
             }
