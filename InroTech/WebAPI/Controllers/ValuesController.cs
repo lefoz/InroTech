@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
         private Sim_Graph SG = new Sim_Graph();//SimGraphInterface
         private Sim_Register SR = new Sim_Register();//SimRegisterInterface
       //private Sim_TaskManager = ScaffoldingTypeMapper = new ;//SimTaskManagerInterface
-        private string[] simFullRegArray;
+        //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
         // GET api/values
@@ -53,14 +53,17 @@ namespace WebAPI.Controllers
         [HttpGet("getarray/{id}")]
         public string[] GetValues(int id)
         {
+            string[] SimArray;
             switch (id)
             {
-                case 1: simFullRegArray = SR.GetAllReg();
+                case 1: SimArray = SR.GetAllReg();
                         break;
-                default: simFullRegArray = new [] {"Fault"};
-                    break;
+                case 2: SimArray = SR.Sim_RobotInfo();
+                        break;
+                default: SimArray = new [] {"Fault"};
+                        break;
             }
-            return simFullRegArray;
+            return SimArray;
         }
         
         // POST api/values/#
