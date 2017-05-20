@@ -2,6 +2,6 @@
 {
     public interface IUserDb
     {
-        bool GetUser(string name, string password);
+        bool GetUser(string name, string pass);
     }
 }

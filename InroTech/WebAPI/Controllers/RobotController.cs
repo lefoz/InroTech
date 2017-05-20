@@ -27,24 +27,12 @@ namespace WebAPI.Controllers
             return dict;
         }
 
-        // GET: api/Robot/5
-        [HttpGet("{id}")]
-        public DataTable Get(int id)
+        // GET: api/robot/value 
+        [HttpGet("{robotip}:{camip}")]
+        public string Get(string robotip, string camip)
         {
-            DataTable simDt;
-            switch (id)
-            {
-                //    case 1:
-                //        simDt = RI.GetReg();//DataTable
-                //        break;
-                //    case 2:
-                //        simDt = RI.GetSelectedReg(SelRegArray);//DataTable
-                //        break;
-                default:
-                    simDt = new DataTable();
-                    break;
-            }
-            return simDt;
+            // for testing purpose
+            return robotip +"/"+camip;
         }
 
         [HttpGet("getarray/{id}")]
