@@ -13,9 +13,9 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class RobotController : Controller
     {
-      //private Graph GI = new ;
-      //private Register RI = new ;
-      //private Taskmanager TMI = new ;
+      //private Graph GI = new ;//GraphInterface
+      //private Register RI = new ;//RegisterInterface
+      //private Taskmanager TMI = new ;//TaskmanagerInterface
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
@@ -24,7 +24,7 @@ namespace WebAPI.Controllers
         public Dictionary<string, int> Get()
         {
             var dict = new Dictionary<string, int>();
-            dict.Add("x", GI.GetGraph());
+            //dict.Add("x", GI.GetGraph());
             return dict;
         }
 
@@ -35,12 +35,12 @@ namespace WebAPI.Controllers
             DataTable simDt;
             switch (id)
             {
-                case 1:
-                    simDt = RI.GetReg();//DataTable
-                    break;
-                case 2:
-                    simDt = RI.GetSelectedReg(SelRegArray);//DataTable
-                    break;
+                //    case 1:
+                //        simDt = RI.GetReg();//DataTable
+                //        break;
+                //    case 2:
+                //        simDt = RI.GetSelectedReg(SelRegArray);//DataTable
+                //        break;
                 default:
                     simDt = new DataTable();
                     break;
@@ -53,9 +53,9 @@ namespace WebAPI.Controllers
         {
             switch (id)
             {
-                case 1:
-                    FullRegArray = SR.GetAllReg();
-                    break;
+                //case 1:
+                //    FullRegArray = SR.GetAllReg();
+                //    break;
                 default:
                     FullRegArray = new[] { "Fault" };
                     break;
@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
 
             if (values != null)
             {
-                //SR.RegArrayTester(values);
+                
                 SelRegArray = values;
 
 

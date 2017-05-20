@@ -13,9 +13,9 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private Sim_Graph SG = new Sim_Graph();
-        private Sim_Register SR = new Sim_Register();
-      //private Sim_TaskManager = ScaffoldingTypeMapper = new ;
+        private Sim_Graph SG = new Sim_Graph();//SimGraphInterface
+        private Sim_Register SR = new Sim_Register();//SimRegisterInterface
+      //private Sim_TaskManager = ScaffoldingTypeMapper = new ;//SimTaskManagerInterface
         private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
