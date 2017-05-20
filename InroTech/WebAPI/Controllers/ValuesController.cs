@@ -6,6 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 using Inrotech.Domain.Graph;
 using Inrotech.Domain.Register;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Scaffolding;
 
 namespace WebAPI.Controllers
 {
@@ -13,7 +14,8 @@ namespace WebAPI.Controllers
     public class ValuesController : Controller
     {
         private Sim_Graph SG = new Sim_Graph();
-        private Real_Register SR = new Real_Register();
+        private Sim_Register SR = new Sim_Register();
+      //private Sim_TaskManager = ScaffoldingTypeMapper = new ;
         private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
