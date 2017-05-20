@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data;
 using FRRJIf;
     
 namespace Inrotech.Domain.Components.Robot
@@ -10,12 +11,24 @@ namespace Inrotech.Domain.Components.Robot
         private FRRJIf.Core objCore;
         private FRRJIf.DataTable objDataTable1;
         private FRRJIf.DataTable objDataTable2;
-        private FRRJIf.DataNumReg objNumReg;
-        private FRRJIf.DataNumReg objNumReg2;
-        private FRRJIf.DataNumReg objNumReg3;
-        private FRRJIf.DataTask[] objTask;
+        private FRRJIf.DataNumReg objAllReg;
+        private FRRJIf.DataNumReg[] objSelectedReg;
+        private FRRJIf.DataTask[] objTaskList;
+        private FRRJIf.DataTable selectedRegTable;
 
-        public string hostName;
+        private System.Data.DataTable dT;
+
+        private string hostName;
+        private int[] selectedRegArr;//hvilke reg der er selected fra website       
+
+        //construct        
+        public Robot(string[] selectedReg)
+        {
+            objSelectedReg = new FRRJIf.DataNumReg[selectedReg.Length];
+            //parse string[] to int[]
+            selectedRegArr = Array.ConvertAll(selectedReg, int.Parse);
+        }
+        
 
         private void startConnect(String targetHost)
         {
@@ -30,11 +43,12 @@ namespace Inrotech.Domain.Components.Robot
             {
                 //disconnect
                 Console.WriteLine("Disconnected");
-                objCore.Disconnect();
             }
         }
 
-        private void refresh()
+        
+        //test method
+        /*private void refresh()
         {
             int ii = 0;
             short intLine = 0, intState = 0;
@@ -47,14 +61,14 @@ namespace Inrotech.Domain.Components.Robot
 
             blnValidDT = objDataTable1.Refresh();
             //if refresh failed, disconnect
-            if(blnValidDT == false)
+            if (blnValidDT == false)
             {
                 objCore.Disconnect();
                 Console.WriteLine("Disconnecting - refresh failed");
                 return;
             }
 
-            //TESTDATA FORMAT
+            //TESTDATA FORMATTING
             //Numregs
             strResult = strResult + "--- NumRegs ---\r\n";
             for (ii = objNumReg.StartIndex; ii <= objNumReg.EndIndex; ii++)
@@ -67,7 +81,7 @@ namespace Inrotech.Domain.Components.Robot
                 {
                     strResult = strResult + "R[" + ii + "] : Error!!! \r\n";
                 }
-            }        
+            }
             for (ii = objNumReg2.StartIndex; ii <= objNumReg2.EndIndex; ii++)
             {
                 if (objNumReg2.GetValue(ii, ref vntValue) == true)
@@ -81,15 +95,15 @@ namespace Inrotech.Domain.Components.Robot
             }
             //Tasks
             strResult = strResult + "--- Tasks ---\r\n";
-            for (int i = objTask.GetLowerBound(0); i <= objTask.GetUpperBound(0); i++)
+            for (int i = objTaskList.GetLowerBound(0); i <= objTaskList.GetUpperBound(0); i++)
             {
-                if (objTask[i].GetValue(ref strProg, ref intLine, ref intState, ref strParentProg))
+                if (objTaskList[i].GetValue(ref strProg, ref intLine, ref intState, ref strParentProg))
                 {
                     if (strProg == "")
                     {
                         break;
-                    }                        
-                    strResult = strResult + StrTask(objTask[i].Index, strProg, intLine, intState, strParentProg);
+                    }
+                    strResult = strResult + StrTask(objTaskList[i].Index, strProg, intLine, intState, strParentProg);
                 }
                 else
                 {
@@ -116,50 +130,130 @@ namespace Inrotech.Domain.Components.Robot
                 strResult = strResult + StrIO("AO", 1, 2, ref lngAO) + "\r\n";
                 strResult = strResult + "--- AI ---" + "\r\n";
                 strResult = strResult + StrIO("AI", 1, 2, ref lngAI) + "\r\n";
-            }                
+            }
+            Console.WriteLine(strResult);
+        }*/
+        
+
+        private void refresh()
+        {
+            short intLine = 0, intState = 0;
+            string strResult = null;
+            string[] taskListArr = new string[10];
+            bool blnValidDT = false;
+            object vntValue = null;
+            string strProg = "", strParentProg = "";
+            Array lngAI = new int[3];
+            Array lngAO = new int[3];
+
+            blnValidDT = objDataTable1.Refresh();
+            //if refresh failed, disconnect
+            if (blnValidDT == false)
+            {
+                objCore.Disconnect();
+                Console.WriteLine("Disconnecting - refresh failed");
+                return;
+            }
+
+            //DATA FORMATTING
+            //Numregs
+            for (int i = 0; i <= objSelectedReg.Length-1; i++)
+            {
+                if (objSelectedReg[i].GetValue(selectedRegArr[i], ref vntValue) == true)
+                {
+                    dT.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], vntValue, false});
+
+                    //strResult = strResult + "R[" + selectedRegArr[i] + "] = " + vntValue + "\r\n"; debugging
+                }
+                else
+                {
+                    dT.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], null, false});
+                }
+            }
+            
+            //Tasks
+            for (int i = objTaskList.GetLowerBound(0); i <= objTaskList.GetUpperBound(0); i++)
+            {
+                if (objTaskList[i].GetValue(ref strProg, ref intLine, ref intState, ref strParentProg))
+                {
+                    if (strProg == "")
+                    {
+                        break;
+                    }
+
+                    taskListArr[i] = strResult + StrTask(objTaskList[i].Index, strProg, intLine, intState, strParentProg);
+                }
+                else
+                {
+                    strResult = strResult + "Task error!!!\r\n";
+                }
+            }
+            //Analog IO
+            //read AO - offset 1000 for AO
+            {
+                //read AI - offset 1000 for AI
+                if (objCore.ReadGI(1000 + 1, ref lngAI, 2) == false)
+                {
+                    Console.WriteLine("Disconnected - read AI fail");
+                    objCore.Disconnect();
+                    return;
+                }
+                strResult = strResult + StrIO("AI", 1, 2, ref lngAI) + "\r\n";
+            }
             Console.WriteLine(strResult);
         }
 
         //INITIALIZE, CONNECT, CONSTRUCT DATATABLES
         private void subInit()
         {
+            //vars
             bool connectSuccess = false;
             string strHost = null;
             int timeOut = 5; //connection timeout value
+
+            //init datatable return object
+            dT = new System.Data.DataTable();
+            dT.Clear();
+            dT.Columns.Add("id", typeof(int));
+            dT.Columns.Add("Registry", typeof(int));
+            dT.Columns.Add("Value", typeof(double));
+            dT.Columns.Add("Selected", typeof(bool));
 
             try
             {
                 //Set core
                 objCore = new FRRJIf.Core();
-                //Set datatable1
-                objDataTable1 = objCore.get_DataTable();
-                {                    
-                    objNumReg = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 1, 5);
-                    objNumReg2 = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_REAL, 6, 10);
 
-                    objTask = new FRRJIf.DataTask[10];
-                    objTask[0] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 1);
-                    objTask[1] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 2);
-                    objTask[2] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 3);
-                    objTask[3] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 4);
-                    objTask[4] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 5);
-                    objTask[5] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 6);
-                    objTask[6] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 7);
-                    objTask[7] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 8);
-                    objTask[8] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 9);
-                    objTask[9] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, 10);
+                //Set FANUC datatable1
+                objDataTable1 = objCore.get_DataTable();
+
+
+                //selected numregs
+                for (int i = 0; i < objSelectedReg.Length; i++)
+                {
+                    objSelectedReg[i] = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, selectedRegArr[i], selectedRegArr[i]);
                 }
 
-                // 2nd data table.
-                // You must not set the first data table.
+                //10 data tasks
+                objTaskList = new FRRJIf.DataTask[10];
+                for (int i = 0; i < objTaskList.Length; i++)
+                {
+                    objTaskList[i] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, i+1);
+                }
+
+                //Set data table 2
+                //Must not set/change the 1st data table after initializing the 2nd
                 objDataTable2 = objCore.get_DataTable2();
-                objNumReg3 = objDataTable2.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 1, 5);
-                
+                objAllReg = objDataTable2.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 1, 500);
+
+
+
+
+
                 //HOSTNAME ON LOCAL NETWORK
                 if (string.IsNullOrEmpty(hostName))
                 {
-                    Console.WriteLine("Write hostname and press enter:");
-                    strHost = Console.ReadLine();//default
+                    Console.WriteLine("No host specified");
                     hostName = strHost;
                 }
                 else
@@ -168,7 +262,7 @@ namespace Inrotech.Domain.Components.Robot
                 }
 
                 //CONNECTING
-                timeOut = 5; //time out value                
+                timeOut = 5000; //time out value         
                 if (timeOut > 0)
                     objCore.set_TimeOutValue(timeOut);
                 connectSuccess = objCore.Connect(strHost);
@@ -198,11 +292,11 @@ namespace Inrotech.Domain.Components.Robot
         {
             string tmp = null;
 
-            tmp = "TASK" + Index + ": ";
-            tmp = tmp + " Prog=\"" + strProg + "\"";
-            tmp = tmp + " Line=" + intLine;
-            tmp = tmp + " State=" + intState;
-            tmp = tmp + " ParentProg=\"" + strParentProg + "\"";
+            tmp = "TASK " + Index + ": ";
+            tmp = tmp + " Program = \"" + strProg + "\"";
+            tmp = tmp + " Line = " + intLine;
+            tmp = tmp + " State = " + intState;
+            tmp = tmp + " Parent Program = \"" + strParentProg + "\"";
 
             return tmp + "\r\n";
         }
@@ -223,14 +317,19 @@ namespace Inrotech.Domain.Components.Robot
             return tmp;
         }
 
-    //TEST EXECUTION METHOD
-    public void StartTest(string IP)
+        //TEST EXECUTION METHOD
+        public void StartTest(string IP)
         {
             Console.WriteLine("Trying to connect");
             startConnect(IP);
             Console.WriteLine("Sleeping for 500ms");
             System.Threading.Thread.Sleep(500);
             Console.WriteLine("Refresh prompted");
+            refresh();
+        }
+
+        public void refreshPrompt()
+        {
             refresh();
         }
     }
