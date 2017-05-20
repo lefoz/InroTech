@@ -5,12 +5,12 @@ using System.Linq;
 using Inrotech.Domain.Register;
 namespace Inrotech.Domain.Register
 {
-    public class Real_Register
+    public class Sim_Register
     {
         private DataTable SimReg;
         private DataTable SimRegSelected;
 
-        public Real_Register()
+        public Sim_Register()
         {
             GetSimReg();
         }
