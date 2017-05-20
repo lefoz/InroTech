@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Inrotech.Domain.Graph
 {
-    public class Sim_Graph
+    public class Sim_Graph : IGraph
     {
         int data;
         Random rand = new Random();
@@ -13,7 +13,7 @@ namespace Inrotech.Domain.Graph
         {
             
         }
-        public int GetSim_Graph()
+        public int GetGraph()
         {
             data = rand.Next(100);
             return data;

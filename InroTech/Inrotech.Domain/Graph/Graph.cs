@@ -4,13 +4,18 @@ using System.Text;
 
 namespace Inrotech.Domain.Graph
 {
-    class Graph
+    class Graph : IGraph
     {
         int data;
 
         public Graph()
         {
             
+        }
+
+        public int GetGraph()
+        {
+            throw new NotImplementedException();
         }
     }
 }
