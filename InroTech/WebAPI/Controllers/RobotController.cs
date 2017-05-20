@@ -5,11 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Inrotech.Domain.Components.Robot;
 
 namespace WebAPI.Controllers
 {
-    
-
     [Route("api/[controller]")]
     public class RobotController : Controller
     {

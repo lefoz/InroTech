@@ -13,15 +13,16 @@ namespace Inrotech.Domain.Components.Robot
         private FRRJIf.DataTable objDataTable2;
         private FRRJIf.DataNumReg objAllReg;
         private FRRJIf.DataNumReg[] objSelectedReg;
-        private FRRJIf.DataTask[] objTaskList;
-        private FRRJIf.DataTable selectedRegTable;
-
-        private System.Data.DataTable dT;
+        private FRRJIf.DataTask[] objTaskList;     
 
         private string hostName;
-        private int[] selectedRegArr;//hvilke reg der er selected fra website       
+        private int[] selectedRegArr;//hvilke reg der er selected fra website
 
-        //construct        
+        private System.Data.DataTable dt_Selected;
+        private string[] taskArr;
+        private int voltage;
+        private int amp;
+
         public Robot(string[] selectedReg)
         {
             objSelectedReg = new FRRJIf.DataNumReg[selectedReg.Length];
@@ -29,7 +30,7 @@ namespace Inrotech.Domain.Components.Robot
             selectedRegArr = Array.ConvertAll(selectedReg, int.Parse);
         }
         
-
+        //call this from outside with target IP
         private void startConnect(String targetHost)
         {
             hostName = targetHost;
@@ -45,8 +46,7 @@ namespace Inrotech.Domain.Components.Robot
                 Console.WriteLine("Disconnected");
             }
         }
-
-        
+                
         //test method
         /*private void refresh()
         {
@@ -132,23 +132,21 @@ namespace Inrotech.Domain.Components.Robot
                 strResult = strResult + StrIO("AI", 1, 2, ref lngAI) + "\r\n";
             }
             Console.WriteLine(strResult);
-        }*/
-        
+        }*/        
 
-        private void refresh()
+            //refresh datatable1
+        private void refresh_dt1()
         {
-            short intLine = 0, intState = 0;
-            string strResult = null;
-            string[] taskListArr = new string[10];
-            bool blnValidDT = false;
+            //init
+            short intLine = 0, intState = 0;            
             object vntValue = null;
             string strProg = "", strParentProg = "";
-            Array lngAI = new int[3];
-            Array lngAO = new int[3];
+            Array lngAI = new int[2];
+            bool validRefresh = false;
 
-            blnValidDT = objDataTable1.Refresh();
+            validRefresh = objDataTable1.Refresh();
             //if refresh failed, disconnect
-            if (blnValidDT == false)
+            if (validRefresh == false)
             {
                 objCore.Disconnect();
                 Console.WriteLine("Disconnecting - refresh failed");
@@ -156,68 +154,74 @@ namespace Inrotech.Domain.Components.Robot
             }
 
             //DATA FORMATTING
-            //Numregs
+            //NUMERIC REGISTERS
             for (int i = 0; i <= objSelectedReg.Length-1; i++)
             {
                 if (objSelectedReg[i].GetValue(selectedRegArr[i], ref vntValue) == true)
                 {
-                    dT.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], vntValue, false});
-
-                    //strResult = strResult + "R[" + selectedRegArr[i] + "] = " + vntValue + "\r\n"; debugging
+                    //add data to return-datatable  {id,regnr,value,bool}
+                    dt_Selected.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], vntValue, false});
                 }
                 else
                 {
-                    dT.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], null, false});
+                    dt_Selected.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], null, false});
                 }
             }
             
-            //Tasks
+            //TASKS
             for (int i = objTaskList.GetLowerBound(0); i <= objTaskList.GetUpperBound(0); i++)
             {
                 if (objTaskList[i].GetValue(ref strProg, ref intLine, ref intState, ref strParentProg))
                 {
+                    //if empty, exit to outer loop
                     if (strProg == "")
                     {
                         break;
                     }
-
-                    taskListArr[i] = strResult + StrTask(objTaskList[i].Index, strProg, intLine, intState, strParentProg);
+                    taskArr[i] = "TASK " + objTaskList[i].Index + "  -  Program: " + strProg + "  -  Line: " + intLine + "  -  State: "+ intState + "  -  Parent: " + strParentProg;
                 }
                 else
                 {
-                    strResult = strResult + "Task error!!!\r\n";
+                    taskArr[i] = "TASK " + objTaskList[i].Index + "  -  ERROR";
                 }
             }
-            //Analog IO
-            //read AO - offset 1000 for AO
+            //ANALOG IO
+            //read AnalogOut - offset 1000 to get AO as in FANUC documentation
             {
-                //read AI - offset 1000 for AI
+                //read AnalogIn - offset 1000 to get AI as in FANUC documentation
                 if (objCore.ReadGI(1000 + 1, ref lngAI, 2) == false)
                 {
                     Console.WriteLine("Disconnected - read AI fail");
                     objCore.Disconnect();
                     return;
                 }
-                strResult = strResult + StrIO("AI", 1, 2, ref lngAI) + "\r\n";
+                voltage = (int) lngAI.GetValue(1);
+                amp = (int) lngAI.GetValue(0);
             }
-            Console.WriteLine(strResult);
         }
 
         //INITIALIZE, CONNECT, CONSTRUCT DATATABLES
         private void subInit()
         {
-            //vars
+            //method vars
             bool connectSuccess = false;
             string strHost = null;
             int timeOut = 5; //connection timeout value
 
-            //init datatable return object
-            dT = new System.Data.DataTable();
-            dT.Clear();
-            dT.Columns.Add("id", typeof(int));
-            dT.Columns.Add("Registry", typeof(int));
-            dT.Columns.Add("Value", typeof(double));
-            dT.Columns.Add("Selected", typeof(bool));
+            //tasklist return object
+            taskArr = new string[10];
+
+            //init datatable return objects
+            dt_Selected = new System.Data.DataTable();
+            dt_Selected.Clear();
+            dt_Selected.Columns.Add("id", typeof(int));
+            dt_Selected.Columns.Add("Registry", typeof(int));
+            dt_Selected.Columns.Add("Value", typeof(double));
+            dt_Selected.Columns.Add("Selected", typeof(bool));
+
+            //welding params
+            voltage = 0;
+            amp = 0;
 
             try
             {
@@ -226,7 +230,6 @@ namespace Inrotech.Domain.Components.Robot
 
                 //Set FANUC datatable1
                 objDataTable1 = objCore.get_DataTable();
-
 
                 //selected numregs
                 for (int i = 0; i < objSelectedReg.Length; i++)
@@ -240,15 +243,6 @@ namespace Inrotech.Domain.Components.Robot
                 {
                     objTaskList[i] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, i+1);
                 }
-
-                //Set data table 2
-                //Must not set/change the 1st data table after initializing the 2nd
-                objDataTable2 = objCore.get_DataTable2();
-                objAllReg = objDataTable2.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 1, 500);
-
-
-
-
 
                 //HOSTNAME ON LOCAL NETWORK
                 if (string.IsNullOrEmpty(hostName))
@@ -287,7 +281,15 @@ namespace Inrotech.Domain.Components.Robot
         }
 
 
-        //DATA TYPES
+        //GETTERS
+        public string[] getTaskArr { get => taskArr; }
+        public int getVoltage { get => voltage; }
+        public int getAmp { get => amp; }
+        public System.Data.DataTable getDataTable { get => dt_Selected; }
+
+
+        //DATA TYPES for debugging
+        /* debugging
         private string StrTask(int Index, string strProg, short intLine, short intState, string strParentProg)
         {
             string tmp = null;
@@ -299,7 +301,8 @@ namespace Inrotech.Domain.Components.Robot
             tmp = tmp + " Parent Program = \"" + strParentProg + "\"";
 
             return tmp + "\r\n";
-        }
+        
+        
         private string StrIO(string strIOType, short StartIndex, short EndIndex, ref Array values)
         {
             string tmp = null;
@@ -316,6 +319,7 @@ namespace Inrotech.Domain.Components.Robot
             }
             return tmp;
         }
+        */
 
         //TEST EXECUTION METHOD
         public void StartTest(string IP)
@@ -325,12 +329,12 @@ namespace Inrotech.Domain.Components.Robot
             Console.WriteLine("Sleeping for 500ms");
             System.Threading.Thread.Sleep(500);
             Console.WriteLine("Refresh prompted");
-            refresh();
+            refresh_dt1();
         }
 
         public void refreshPrompt()
         {
-            refresh();
+            refresh_dt1();
         }
     }
 }
