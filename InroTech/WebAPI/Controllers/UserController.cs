@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Inrotech.Domain.Sim;
+using Inrotech.Domain.UserDb;
 
 namespace WebAPI.Controllers
 {
@@ -12,7 +12,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private Sim_database _val = new Sim_database();
+        private IUserDb _val = new Sim_database();
 
         // GET: api/User
         [HttpGet]
@@ -26,7 +26,7 @@ namespace WebAPI.Controllers
         public bool Get(string userid, string pass)
         {
             var _val = new Sim_database();
-            return _val.Sim_GetUser(userid, pass);
+            return _val.GetUser(userid, pass);
         }
 
 

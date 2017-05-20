@@ -5,27 +5,21 @@ using System.Linq;
 using System.Data.Sql;
 using MySql.Data.MySqlClient;
 
-namespace Inrotech.Domain.Sim
+namespace Inrotech.Domain.UserDb
 {
 
-    public class Sim_database
+    public class Sim_database : IUserDb
     {
-        private Random rand = new Random();
-        private const String ConnectorString = @"server=mysql45.unoeuro.com;Port=3306;userid=kasper_mad_com;
-            password=Gruppe3;database=kasper_madsen_com_db2";
+        private String ConnectorString;
         MySqlConnection conn;
 
         public Sim_database()
         {
-            //https://mysql.unoeuro.com/index.php
-        }
-        private int GetSim_database()
-        {
-            return 1;
+            ConnectorString = @"server=mysql45.unoeuro.com;Port=3306;userid=kasper_mad_com;
+            password=Gruppe3;database=kasper_madsen_com_db2";
         }
 
-        //hashes the password, adding a salt of random int. returns a list with two int.
-        public bool Sim_GetUser(string name, string password)
+        public bool GetUser(string name, string password)
         {
             var _res = false;
             try
@@ -60,11 +54,6 @@ namespace Inrotech.Domain.Sim
             }
 
             return _res;
-        }
-
-        //gets user from database
-        private void GetSim_userdatabase(string userid, string pass)
-        {
         }
 
     }
