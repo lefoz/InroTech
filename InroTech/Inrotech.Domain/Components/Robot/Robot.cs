@@ -8,15 +8,13 @@ namespace Inrotech.Domain.Components.Robot
 {
     public class Robot
     {
-        private FRRJIf.Core objCore;
+        private Core objCore;
         private FRRJIf.DataTable objDataTable1;
-        private FRRJIf.DataTable objDataTable2;
-        private FRRJIf.DataNumReg objAllReg;
-        private FRRJIf.DataNumReg[] objSelectedReg;
-        private FRRJIf.DataTask[] objTaskList;     
+        private DataNumReg[] objSelectedReg;
+        private DataTask[] objTaskList;
 
         private string hostName;
-        private int[] selectedRegArr;//hvilke reg der er selected fra website
+        private int[] selectedRegArr; //hvilke reg der er selected fra website
 
         private System.Data.DataTable dt_Selected;
         private string[] taskArr;
@@ -285,7 +283,7 @@ namespace Inrotech.Domain.Components.Robot
         public string[] getTaskArr { get => taskArr; }
         public int getVoltage { get => voltage; }
         public int getAmp { get => amp; }
-        public System.Data.DataTable getDataTable { get => dt_Selected; }
+        public System.Data.DataTable getSelectedData { get => dt_Selected; }
 
 
         //DATA TYPES for debugging
