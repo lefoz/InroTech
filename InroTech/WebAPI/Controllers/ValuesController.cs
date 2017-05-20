@@ -22,7 +22,10 @@ namespace WebAPI.Controllers
         public Dictionary<string, int> Get()
         {
             var dict = new Dictionary<string, int>();
-            dict.Add("x", SG.GetSim_Graph());
+            dict.Add("volt", SG.GetSim_Graph());
+            dict.Add("amp", SG.GetSim_Graph());
+            dict.Add("date", DateTime.Now.Second);
+
             return dict;
         }
 
