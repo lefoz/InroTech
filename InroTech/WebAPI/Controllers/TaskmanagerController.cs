@@ -14,13 +14,12 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class TaskmanagerController : Controller
     {
-        private Sim_Taskmanager Tasks = new Sim_Taskmanager();
         
         // GET: api/User
         [HttpGet]
-        public Sim_Taskmanager Get()
+        public string Get()
         {   
-            return Tasks;
+            return null;
         }
     }
 }
