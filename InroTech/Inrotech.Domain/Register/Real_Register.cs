@@ -22,32 +22,26 @@ namespace Inrotech.Real_Register
             Reg.Clear();
             Reg.Columns.Add("id", typeof(int));
             Reg.Columns.Add("Registry", typeof(int));
-            Reg.Columns.Add("Name", typeof(string));
             Reg.Columns.Add("Value", typeof(double));
             Reg.Columns.Add("Selected", typeof(bool));
-            Reg.Rows.Add(new object[] { 1, 025, "index 025", 500, false});
-            Reg.Rows.Add(new object[] { 2, 055, "index 055", 25, false });
-            Reg.Rows.Add(new object[] { 3, 075, "index 075", 50, false });
-            Reg.Rows.Add(new object[] { 4, 125, "index 125", 960, false });
-            Reg.Rows.Add(new object[] { 5, 138, "index 138", 58, false });
-            Reg.Rows.Add(new object[] { 6, 285, "index 285", 74, false });
-            Reg.Rows.Add(new object[] { 7, 789, "index 789", 35, false });
-            Reg.Rows.Add(new object[] { 8, 358, "index 358", 40, false });
+            for (int i = 0; i < 500; i++)
+            {
+                Reg.Rows.Add(new object[] { i, 999, 999, false });
+            }
             return Reg;
         }
 
         public DataTable GetSelectedReg(string[] selItems)
         {
-                //Console.WriteLine(selItems.Tostring);
-                DataTable old = GetReg();
-                RegSelected = old.Clone();
+            //Console.WriteLine(selItems.Tostring);
+            DataTable old = GetReg();
+            RegSelected = old.Clone();
             foreach (DataRow row in old.Rows)
             {
                 row["Selected"] = false;
             }
             if (selItems != null)
             {
-
                 foreach (var item in selItems)
                 {
                     int reg = Convert.ToInt32(item);
@@ -57,9 +51,7 @@ namespace Inrotech.Real_Register
                         DataRow row = old.Select("Registry = '" + reg + "'").FirstOrDefault();
                         row["Selected"] = true;
                     }
-                   
-
-                }
+                 }
                 foreach (DataRow row in old.Rows)
                 {
 
@@ -68,7 +60,6 @@ namespace Inrotech.Real_Register
                         RegSelected.ImportRow(row);
                     }
                 }
-
             }
             return RegSelected;
         }
