@@ -19,16 +19,11 @@ namespace WebAPI.Controllers
         //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
-        // GET api/values
+        // GET api/values ( FOR GRAPH A.T.M )
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            var dict = new Dictionary<string, int>();
-            dict.Add("volt", SG.GetGraph());
-            dict.Add("amp", SG.GetGraph());
-            dict.Add("date", DateTime.Now.Second);
-
-            return dict;
+            return SG.GetGraph(null) ;
         }
 
         // GET api/values/#
