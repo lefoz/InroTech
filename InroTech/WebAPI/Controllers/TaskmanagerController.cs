@@ -14,13 +14,13 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class TaskmanagerController : Controller
     {
-        Sim_Taskmanager tasks = new Inrotech.Domain.Taskmanager.Sim_Taskmanager();
+        ITaskmanager tasks = new Sim_Taskmanager();
         
         // GET: api/User
         [HttpGet]
-        public Sim_Taskmanager Get()
+        public DataTable Get()
         {   
-            return tasks;
+            return tasks.getTaskmanager();
         }
     }
 }

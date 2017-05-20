@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Inrotech.Domain.Taskmanager
 {
-    interface ITaskmanager
+    public interface ITaskmanager
     {
         DataTable getTaskmanager();
     }
