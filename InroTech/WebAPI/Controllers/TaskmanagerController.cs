@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class TaskmanagerController : Controller
     {
-        Itaskmanager tasks = new Sim_Taskmanager();
+        ITaskmanager tasks = new Sim_Taskmanager();
         
         // GET: api/taskmanager
         [HttpGet]

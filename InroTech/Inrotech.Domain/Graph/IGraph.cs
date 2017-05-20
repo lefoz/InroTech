@@ -5,7 +5,7 @@ namespace Inrotech.Domain.Graph
 {
     public interface IGraph
     {
-        Dictionary<string, int> GetGraph(IRobot Robot);
+        Dictionary<string, int> GetGraph();
 
     }
 }
