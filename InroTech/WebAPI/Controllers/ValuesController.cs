@@ -13,7 +13,7 @@ namespace WebAPI.Controllers
     public class ValuesController : Controller
     {
         private Sim_Graph SG = new Sim_Graph();
-        private Sim_Register SR = new Sim_Register();
+        private Real_Register SR = new Real_Register();
         private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
