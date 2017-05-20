@@ -10,7 +10,6 @@ namespace Inrotech.Domain.Graph
 
         public Graph()
         {
-            //get The data! ** 
             
         }
     }
