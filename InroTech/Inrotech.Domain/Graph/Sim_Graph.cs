@@ -14,7 +14,7 @@ namespace Inrotech.Domain.Graph
         {
            GraphData = new Dictionary<string, int>();
         }
-        public Dictionary<string, int> GetGraph(IRobot Robot)
+        public Dictionary<string, int> GetGraph()
         {
             GraphData.Add("volt", rand.Next(10));
             GraphData.Add("amp", rand.Next(10));

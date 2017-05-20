@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace Inrotech.Domain.Taskmanager
 {
-    interface Itaskmanager
+    interface ITaskmanager
     {
         DataTable getTaskmanager();
-        void SetTaskmanager(IRobot robot);
     }
 }

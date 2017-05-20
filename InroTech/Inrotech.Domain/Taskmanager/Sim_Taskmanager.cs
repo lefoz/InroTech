@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Inrotech.Domain.Taskmanager
 {
-  public class Sim_Taskmanager : Itaskmanager
+  public class Sim_Taskmanager : ITaskmanager
     {
         private DataTable tasks_DT;
         public Sim_Taskmanager()
         {
             if(tasks_DT == null)
             {
-                this.SetTaskmanager(null);
+                this.SetTaskmanager();
             }
         }
 
@@ -24,9 +24,9 @@ namespace Inrotech.Domain.Taskmanager
             return tasks_DT;
         }
 
-        public void SetTaskmanager(IRobot Robot)
-        {
-            // Simulates Data from IRobot
+        // Simulates Data from IRobot
+        public void SetTaskmanager()
+        { 
             DataTable newTaskDT = new DataTable();
             newTaskDT.Clear();
             newTaskDT.Columns.Add("id", typeof(int));

@@ -5,16 +5,17 @@ using System.Text;
 
 namespace Inrotech.Domain.Graph
 {
-    class Graph : IGraph
+    public class Graph : IGraph
     {
         Dictionary<string, int> GraphData;
 
         public Graph()
         {
-            
+            GraphData = new Dictionary<string, int>();
+          
         }
 
-        public Dictionary<string,int> GetGraph(IRobot Robot)
+        public Dictionary<string,int> GetGraph()
         {
             throw new NotImplementedException();
         }

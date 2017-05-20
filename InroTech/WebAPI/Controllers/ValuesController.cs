@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            return SG.GetGraph(null) ;
+            return SG.GetGraph() ;
         }
 
         // GET api/values/#
