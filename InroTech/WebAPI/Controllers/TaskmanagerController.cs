@@ -16,11 +16,11 @@ namespace WebAPI.Controllers
     {
         Itaskmanager tasks = new Sim_Taskmanager();
         
-        // GET: api/User
+        // GET: api/taskmanager
         [HttpGet]
-        public Sim_Taskmanager Get()
+        public DataTable Get()
         {   
-            return tasks;
+            return tasks.getTaskmanager();
         }
     }
 }
