@@ -32,6 +32,9 @@ namespace WebAPI.Controllers
         [HttpGet("{robotip}:{camip}")]
         public string Get(string robotip, string camip)
         {
+            //kald til IRobot med robot ip
+            //skal ikke sende kamera ip
+            //skal returnere bool fra robot hvis conn.
             // for testing purpose
             return robotip +"/"+camip;
         }

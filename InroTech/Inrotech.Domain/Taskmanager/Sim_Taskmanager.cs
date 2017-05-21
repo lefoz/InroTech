@@ -10,7 +10,8 @@ namespace Inrotech.Domain.Taskmanager
 {
   public class Sim_Taskmanager : ITaskmanager
     {
-        private DataTable tasks_DT;
+        private DataTable tasks_DT = null;
+
         public Sim_Taskmanager()
         {
             if(tasks_DT == null)
@@ -21,6 +22,7 @@ namespace Inrotech.Domain.Taskmanager
 
         public DataTable getTaskmanager()
         {
+            //burde kalde en funktion på robot
             return tasks_DT;
         }
 
