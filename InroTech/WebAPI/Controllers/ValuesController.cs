@@ -16,7 +16,7 @@ namespace WebAPI.Controllers
     {
         private IGraph SG = new Sim_Graph();//SimGraphInterface
         private IRegister SR = new Sim_Register();//SimRegisterInterface
-        private ITaskManager STM = new Sim_Taskmanager(); //SimTaskManagerInterface
+        private ITaskManager STM = new Sim_TaskManager(); //SimTaskManagerInterface
         //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
@@ -46,13 +46,13 @@ namespace WebAPI.Controllers
             return simDt;
         }
 
-          ITaskManager tasks = new Sim_Taskmanager();
+          ITaskManager tasks = new Sim_TaskManager();
         
         // GET: api/taskmanager
         [HttpGet("taskmanager/")]
         public DataTable GetTaskmanager()
         {
-            return STM.getTaskmanager(); ;
+            return STM.getTaskManager(); ;
         }
 
         [HttpGet("getarray/{id}")]

@@ -19,8 +19,8 @@ namespace WebAPI
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();
-
             host.Run();
+
         }
     }
 }
