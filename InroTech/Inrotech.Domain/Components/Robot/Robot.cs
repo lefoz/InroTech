@@ -21,7 +21,6 @@ namespace Inrotech.Domain.Components.Robot
 
         private string hostName = null;
         private int[] selectedRegArr; //hvilke reg der er selected fra website
-        private string[] selectedStringArr;
 
         private System.Data.DataTable dt_Selected;
         private string[] taskArr;
@@ -39,38 +38,31 @@ namespace Inrotech.Domain.Components.Robot
         private bool isInit = false; //has class been initialized?
 
         //constructor private for singleton
-        private Robot()
+        public Robot()
         {
             reg = new Real_Register();
-        }
-        private static Robot instance = null;
-        //get instance of class
-        public Robot getInstance()
-        {
-            if (instance == null)
-            {
-                instance = new Robot();
-            }      
-        return instance;
-        }
+        }        
         
         //call this from outside with target IP
-        public void startConnect(string targetHost)
+        public bool startConnect(string targetHost)
         {
             hostName = targetHost;
 
             //tjek om der er hul igennem til DLL
             if (objCore == null)
             {
-                objDataTable1.Kill
                 //connect
-                connectRobot(targetHost);
+                if(connectRobot(targetHost))
+                {
+                    return true;
+                }
             }
             else
             {
                 //disconnect
                 Console.WriteLine("Disconnected");
             }
+            return false;
         }
                  
         //refresh datatable1
@@ -216,7 +208,7 @@ namespace Inrotech.Domain.Components.Robot
             }
         }
 
-        private void connectRobot(string target)
+        private bool connectRobot(string target)
         {
             //method vars
             bool connectSuccess = false;
@@ -256,14 +248,16 @@ namespace Inrotech.Domain.Components.Robot
                         //connected
                         Console.WriteLine("Connected");
                         isConnected = true;
+                        return true;
                     }
-                }                
+                }
             }
             catch (Exception ex)
             {
                 //handle ex
                 Console.WriteLine(ex.ToString());
             }
+            return false;
         }
 
         // ----------- test
@@ -290,10 +284,6 @@ namespace Inrotech.Domain.Components.Robot
         //get fullreg method on real_reg instance
         public string[] getAllReg { get => reg.GetAllReg(); }
         public System.Data.DataTable getReg { get => reg.GetReg(); }
-        public System.Data.DataTable getSelectedReg(string[] arr)
-        {
-            return reg.GetSelectedReg(arr);
-        }
         //get robot info from numregs
         public string[] getRobotInfo { get => reg.RobotInfo(robotName, hostName, job, ofJob); }
 
@@ -304,20 +294,29 @@ namespace Inrotech.Domain.Components.Robot
 
         public bool subClear()
         {
+            //attempt disconnect
             bool succes = objCore.Disconnect();
             if (succes)
             {
                 isConnected = false;
 
                 //clear local objects
-                if (isConnected)
-                {
+                
                     objCore = null;
+                    objDataTable1.Clear();
+                    dt_Selected.Clear();
+
+                if (startConnect(hostName))
+                {
+                    return true;
                 }
-                objDataTable1.Clear();
-                dt_Selected.Clear();
-                startConnect(hostName);
-                return true;
+                else
+                {
+                    return false;
+                }
+
+                
+                
             }
             else
             {

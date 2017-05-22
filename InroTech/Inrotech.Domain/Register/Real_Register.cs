@@ -9,7 +9,7 @@ namespace Inrotech.Domain.Register
     public class Real_Register
     {
         private DataTable Reg;
-        private DataTable RegSelected;
+        //private DataTable RegSelected;
 
         public Real_Register()
         {
@@ -32,9 +32,9 @@ namespace Inrotech.Domain.Register
             return Reg;
         }
 
-        public DataTable GetSelectedReg(string[] selItems)
+        /*public DataTable GetSelectedReg(string[] selItems)
         {
-           /* int[] forwardArr = new int[selItems.Length];
+            int[] forwardArr = new int[selItems.Length];
 
             //Console.WriteLine(selItems.Tostring);
             DataTable old = GetReg();
@@ -68,10 +68,11 @@ namespace Inrotech.Domain.Register
                     }
                 }
             }
-            */
+            
 
             return RegSelected;
         }
+    */
 
         private DataTable GetRobotData(string[] incomingArr)
         {
