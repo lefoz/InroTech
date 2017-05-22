@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inrotech.Domain.Components.Robot;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -7,30 +8,36 @@ using System.Threading.Tasks;
 
 namespace Inrotech.Domain.Taskmanager
 {
-  public class Sim_Taskmanager
+  public class Sim_Taskmanager : ITaskmanager
     {
-        private DataTable SimReg;
+        private DataTable tasks_DT;
         public Sim_Taskmanager()
         {
-            SimReg = new DataTable();
-            SimReg.Clear();
-            SimReg.Columns.Add("id", typeof(int));
-            SimReg.Columns.Add("Registry", typeof(int));
-            SimReg.Columns.Add("Value", typeof(double));
-            SimReg.Columns.Add("Selected", typeof(bool));
-            SimReg.Rows.Add(new object[] { 1, 025, 500, false});
-            SimReg.Rows.Add(new object[] { 2, 055, 25, false });
-            SimReg.Rows.Add(new object[] { 3, 075, 50, false });
-            SimReg.Rows.Add(new object[] { 4, 125, 960, false });
-            SimReg.Rows.Add(new object[] { 5, 138, 58, false });
-            SimReg.Rows.Add(new object[] { 6, 285, 74, false });
-            SimReg.Rows.Add(new object[] { 7, 789, 35, false });
-            SimReg.Rows.Add(new object[] { 8, 358, 40, false });
+            if(tasks_DT == null)
+            {
+                this.SetTaskmanager();
+            }
         }
 
         public DataTable getTaskmanager()
         {
-            return SimReg;
+            return tasks_DT;
+        }
+
+        // Simulates Data from IRobot
+        public void SetTaskmanager()
+        { 
+            DataTable newTaskDT = new DataTable();
+            newTaskDT.Clear();
+            newTaskDT.Columns.Add("id", typeof(int));
+            newTaskDT.Columns.Add("Name", typeof(String));
+            newTaskDT.Columns.Add("Status", typeof(String));
+            newTaskDT.Columns.Add("Cpu", typeof(String));
+            newTaskDT.Rows.Add(new object[] { 1, "Startup", "Done", 0 });
+            newTaskDT.Rows.Add(new object[] { 2, "Laser Adjustment","Running", 25 });
+            newTaskDT.Rows.Add(new object[] { 3, "Ctrl32","Running", 50 });
+            newTaskDT.Rows.Add(new object[] { 4, "Gyro Mesurment", "Error", 0 });
+            this.tasks_DT = newTaskDT;
         }
     }
 }

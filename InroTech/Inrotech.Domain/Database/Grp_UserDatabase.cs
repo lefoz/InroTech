@@ -8,18 +8,18 @@ using MySql.Data.MySqlClient;
 namespace Inrotech.Domain.UserDb
 {
 
-    public class Sim_database : IUserDb
+    public class Grp_UserDatabase : IUserDb
     {
         private String ConnectorString;
         MySqlConnection conn;
 
-        public Sim_database()
+        public Grp_UserDatabase()
         {
             ConnectorString = @"server=mysql45.unoeuro.com;Port=3306;userid=kasper_mad_com;
             password=Gruppe3;database=kasper_madsen_com_db2";
         }
 
-        public bool GetUser(string name, string password)
+        public bool GetUser(string name, string pass)
         {
             var _res = false;
             try
@@ -27,7 +27,7 @@ namespace Inrotech.Domain.UserDb
                 conn = new MySqlConnection(ConnectorString);
                 conn.Open();
 
-                string stm = "SELECT `id`, `name`, `uservar` FROM `inro_user` WHERE `name`= '"+name+"' AND `uservar`= '"+password+"'";
+                string stm = "SELECT `id`, `name`, `uservar` FROM `inro_user` WHERE `name`= '"+ name + "' AND `uservar`= '"+ pass + "'";
                 MySqlCommand cmd = new MySqlCommand(stm, conn);
 
                 MySqlDataReader dataReader = cmd.ExecuteReader();

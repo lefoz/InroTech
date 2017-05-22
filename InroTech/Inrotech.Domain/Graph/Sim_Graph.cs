@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Inrotech.Domain.Components.Robot;
 
 namespace Inrotech.Domain.Graph
 {
-    public class Sim_Graph
+    public class Sim_Graph : IGraph
     {
-        int data;
+        Dictionary<string, int> GraphData;
         Random rand = new Random();
 
         public Sim_Graph()
         {
-            
+           GraphData = new Dictionary<string, int>();
         }
-        public int GetSim_Graph()
+        public Dictionary<string, int> GetGraph()
         {
-            data = rand.Next(100);
-            return data;
+            GraphData.Add("volt", rand.Next(10));
+            GraphData.Add("amp", rand.Next(10));
+
+            return GraphData;
         }
     }
 }

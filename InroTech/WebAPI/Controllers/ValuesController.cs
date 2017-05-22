@@ -13,22 +13,17 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private Sim_Graph SG = new Sim_Graph();//SimGraphInterface
+        private IGraph SG = new Sim_Graph();//SimGraphInterface
         private Sim_Register SR = new Sim_Register();//SimRegisterInterface
       //private Sim_TaskManager = ScaffoldingTypeMapper = new ;//SimTaskManagerInterface
         //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
-        // GET api/values
+        // GET api/values ( FOR GRAPH A.T.M )
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            var dict = new Dictionary<string, int>();
-            dict.Add("volt", SG.GetSim_Graph());
-            dict.Add("amp", SG.GetSim_Graph());
-            dict.Add("date", DateTime.Now.Second);
-
-            return dict;
+            return SG.GetGraph() ;
         }
 
         // GET api/values/#

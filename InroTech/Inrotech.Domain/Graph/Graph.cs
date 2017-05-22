@@ -1,16 +1,23 @@
-﻿using System;
+﻿using Inrotech.Domain.Components.Robot;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Inrotech.Domain.Graph
 {
-    class Graph
+    public class Graph : IGraph
     {
-        int data;
+        Dictionary<string, int> GraphData;
 
         public Graph()
         {
-            
+            GraphData = new Dictionary<string, int>();
+          
+        }
+
+        public Dictionary<string,int> GetGraph()
+        {
+            throw new NotImplementedException();
         }
     }
 }

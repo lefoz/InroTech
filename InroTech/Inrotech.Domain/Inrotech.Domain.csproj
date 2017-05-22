@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Video\" />
+    <Compile Remove="Video\**" />
+    <EmbeddedResource Remove="Video\**" />
+    <None Remove="Video\**" />
   </ItemGroup>
 
   <ItemGroup>

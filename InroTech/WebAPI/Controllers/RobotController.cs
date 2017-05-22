@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Inrotech.Domain.Components.Robot;
+using Inrotech.Domain.Graph;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     public class RobotController : Controller
     {
-      //private Graph GI = new ;//GraphInterface
+        private IGraph GI = new Graph();//GraphInterface
       //private Register RI = new ;//RegisterInterface
       //private Taskmanager TMI = new ;//TaskmanagerInterface
+        
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
@@ -22,29 +24,16 @@ namespace WebAPI.Controllers
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            var dict = new Dictionary<string, int>();
-            //dict.Add("x", GI.GetGraph());
-            return dict;
+            return GI.GetGraph();
+           
         }
 
-        // GET: api/Robot/5
-        [HttpGet("{id}")]
-        public DataTable Get(int id)
+        // GET: api/robot/value 
+        [HttpGet("{robotip}:{camip}")]
+        public string Get(string robotip, string camip)
         {
-            DataTable simDt;
-            switch (id)
-            {
-                //    case 1:
-                //        simDt = RI.GetReg();//DataTable
-                //        break;
-                //    case 2:
-                //        simDt = RI.GetSelectedReg(SelRegArray);//DataTable
-                //        break;
-                default:
-                    simDt = new DataTable();
-                    break;
-            }
-            return simDt;
+            // for testing purpose
+            return robotip +"/"+camip;
         }
 
         [HttpGet("getarray/{id}")]
