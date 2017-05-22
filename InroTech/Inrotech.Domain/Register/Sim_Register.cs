@@ -5,7 +5,7 @@ using System.Linq;
 using Inrotech.Domain.Register;
 namespace Inrotech.Domain.Register
 {
-    public class Sim_Register
+    public class Sim_Register : ISim_Register
     {
         private DataTable SimReg;
         private DataTable SimRegSelected;
