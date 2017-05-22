@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Inrotech.Domain.TaskManager
+namespace Inrotech.Domain.Taskmanager
 {
     public interface ItaskManager
     {
         DataTable getTaskManager();
-        void SetTaskmanager(IRobot robot);
+        void SetTaskManager(IRobot robot);
     }
 }
