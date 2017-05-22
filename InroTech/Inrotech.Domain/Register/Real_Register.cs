@@ -72,13 +72,13 @@ namespace Inrotech.Real_Register
             return RegSelected;
         }
 
-        private DataTable getRobotData(string[] incomingArr)
+        /*private DataTable getRobotData(string[] incomingArr)
         {
 
-            Robot r = new Robot(incomingArr); //TESTTESTTEST BAD CONNECTION
+            Robot r = new Robot(); //TESTTESTTEST BAD CONNECTION
 
             return r.getSelectedData; //LAV OM!!!
-        }
+        }*/
 
         public string[] GetAllReg()
         {
