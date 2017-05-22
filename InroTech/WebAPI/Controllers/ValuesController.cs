@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
           ITaskmanager tasks = new Sim_Taskmanager();
         
         // GET: api/taskmanager
-        [HttpGet]
+        [HttpGet("taskmanager/")]
         public DataTable GetTaskmanager()
         {
             return STM.getTaskmanager(); ;
