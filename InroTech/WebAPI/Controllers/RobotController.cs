@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
-        private Robot n = null;
+        private Robot n;
         private bool isConnect = false;
 
 
@@ -31,8 +31,7 @@ namespace WebAPI.Controllers
             {
                 n.refreshPrompt();
             }
-            return n.GetGraph();
-           
+            return n.GetGraph();           
         }
 
         // GET: api/robot/value 
@@ -41,7 +40,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                n.getInstance();
+                n = new Robot();
 
                 n.startConnect(robotip);
                 while(n.getIsConnected == false)
@@ -50,8 +49,7 @@ namespace WebAPI.Controllers
                     //wait
                     Console.WriteLine("waiting for connect.. " + i);
                     i++;
-                    if (i > 5000)
-                        break;
+                    System.Threading.Thread.Sleep(100);
                 }
                 if (n.getIsConnected)
                 {
@@ -130,10 +128,12 @@ namespace WebAPI.Controllers
                     //wait
                     Console.WriteLine("waiting for connection.. " + i);
                     i++;
-                    if (i > 5000)
-                        break;
+                    System.Threading.Thread.Sleep(100);
                 }
-                n.subInit(values);
+                if (isConnect)
+                {
+                    n.subInit(values);
+                }
             }
         }
     }
