@@ -75,9 +75,10 @@ namespace Inrotech.Real_Register
         private DataTable getRobotData(string[] incomingArr)
         {
 
-            Robot r = new Robot(incomingArr); //TESTTESTTEST BAD CONNECTION
+            //Robot r = new Robot(incomingArr); //TESTTESTTEST BAD CONNECTION
 
-            return r.getSelectedData; //LAV OM!!!
+            //return r.getSelectedData; //LAV OM!!!
+            return null;
         }
 
         public string[] GetAllReg()
