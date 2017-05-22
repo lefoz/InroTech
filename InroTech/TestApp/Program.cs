@@ -21,15 +21,15 @@ namespace TestApp
             arr[4] = rnd.Next(1, 500).ToString();
 
 
-            Robot r = new Robot(arr);
-            r.StartTest("192.168.117.40");           
+            //Robot r = new Robot();
+            //r.StartTest("192.168.117.40");           
 
             int i = 0;
             while (true)
             {                
                 i++;
                 Console.WriteLine("Refresh " + i + " prompted");
-                r.refreshPrompt();
+                //r.refreshPrompt();
                 Console.ReadKey();
             }
 
