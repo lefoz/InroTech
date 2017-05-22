@@ -19,8 +19,8 @@ namespace WebAPI.Controllers
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
-        Robot n = null;
-        bool isConnect = false;
+        private Robot n = null;
+        private bool isConnect = false;
 
 
         // GET: api/Robot
@@ -36,28 +36,38 @@ namespace WebAPI.Controllers
         }
 
         // GET: api/robot/value 
-        [HttpGet("setrobot/{robotip}:{camip}")]
-        public string Get(string robotip, string camip)
+        [HttpGet("setrobot/{robotip}")]
+        public bool Get(string robotip)
         {
             try
             {
                 n.getInstance();
 
                 n.startConnect(robotip);
-                isConnect = n.getIsConnected;
+                while(n.getIsConnected == false)
+                {
+                    int i = 0;
+                    //wait
+                    Console.WriteLine("waiting for connect.. " + i);
+                    i++;
+                    if (i > 5000)
+                        break;
+                }
+                if (n.getIsConnected)
+                {
+                    isConnect = true;
+                }
             }
             catch
             {
                 Console.WriteLine("catch error");
             }
-            
-
 
             //kald til IRobot med robot ip
             //skal ikke sende kamera ip
             //skal returnere bool fra robot hvis conn.
             // for testing purpose
-            return robotip +"/"+camip;
+            return n.getIsConnected;
         }
 
         [HttpGet("getarray/{id}")]
@@ -66,15 +76,17 @@ namespace WebAPI.Controllers
             switch (id)
             {
                 case 1:
-                    FullRegArray = n.getAllReg;
+                    if(isConnect)
+                        FullRegArray = n.getAllReg;
                     break;
                 case 2:
-                    FullRegArray = n.getRobotInfo;
+                    if (isConnect)
+                        FullRegArray = n.getRobotInfo;
                     break;
                 default:
                     FullRegArray = new[] { "Fault" };
                     break;
-            }
+            }           
             return FullRegArray;
         }
 
@@ -82,34 +94,47 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public DataTable Get(int id)
         {
-            DataTable simDt;
+            DataTable dt;
             switch (id)
             {
-                case 1: simDt = SR.GetReg();//DataTable
+                case 1:
+                    dt = n.getReg;//DataTable
                     break;
                 case 2:
-                    simDt = SR.GetSelectedReg(simSelRegArray);//DataTable
+                    dt = n.getSelectedData;//DataTable
                     break;
                 default:
-                    simDt = new DataTable();
+                    dt = new DataTable();
                     break;
             }
-            return simDt;
+            return dt;
         }
 
         // POST: api/Robot
         [HttpPost]
         public void Post([FromBody]string[] values)
         {
-
             if (values != null)
-            {
-                
+            {                
                 SelRegArray = values;
 
-
+                if (n.subClear())
+                {
+                    isConnect = false;
+                }           
+                //init robot with string[] to define FRRJIf.DataTable size
+                //init datatables specifically for selected values
+                while(isConnect == false)
+                {
+                    int i = 0;
+                    //wait
+                    Console.WriteLine("waiting for connection.. " + i);
+                    i++;
+                    if (i > 5000)
+                        break;
+                }
+                n.subInit(values);
             }
-
         }
     }
 }

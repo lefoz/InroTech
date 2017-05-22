@@ -27,17 +27,18 @@ namespace Inrotech.Domain.Register
             Reg.Columns.Add("Selected", typeof(bool));
             for (int i = 0; i < 500; i++)
             {
-                Reg.Rows.Add(new object[] { i+1, 999, 999, false });
+                Reg.Rows.Add(new object[] { i+1, 99999, 99999, false });
             }
             return Reg;
         }
 
         public DataTable GetSelectedReg(string[] selItems)
         {
-            /*int[] forwardArr = new int[selItems.Length];
+           /* int[] forwardArr = new int[selItems.Length];
 
             //Console.WriteLine(selItems.Tostring);
             DataTable old = GetReg();
+            //clone copies the structure of the old table, not the data
             RegSelected = old.Clone();
             //nulstil
             foreach (DataRow row in old.Rows)
@@ -62,12 +63,12 @@ namespace Inrotech.Domain.Register
                     {
                         
                         forwardArr[(int)row["id"]-1] = (int)row["Registry"];
-
+                        RegSelected.ImportRow
 
                     }
                 }
-            }*/
-
+            }
+            */
 
             return RegSelected;
         }
