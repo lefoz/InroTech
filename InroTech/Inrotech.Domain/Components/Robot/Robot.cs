@@ -44,7 +44,6 @@ namespace Inrotech.Domain.Components.Robot
             }            
             return instance;
         }
-
         
         //call this from outside with target IP
         private void startConnect(string targetHost)
@@ -255,6 +254,11 @@ namespace Inrotech.Domain.Components.Robot
         public int getAmp { get => amp; }
         public System.Data.DataTable getSelectedData { get => dt_Selected; }
 
+        public void refreshPrompt()
+        {
+            refresh_dt1();
+        }
+
 
         //TEST EXECUTION METHODS
         public void StartTest(string IP)
@@ -265,11 +269,7 @@ namespace Inrotech.Domain.Components.Robot
             System.Threading.Thread.Sleep(500);
             Console.WriteLine("Refresh prompted");
             refresh_dt1();
-        }
-        public void refreshPrompt()
-        {
-            refresh_dt1();
-        }
+        }        
         //DATA TYPES for debugging
         /* debugging
         private string StrTask(int Index, string strProg, short intLine, short intState, string strParentProg)
