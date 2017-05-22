@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
     public class ValuesController : Controller
     {
         private IGraph SG = new Sim_Graph();//SimGraphInterface
-        private ISim_Register SR = new Sim_Register();//SimRegisterInterface
+        private IRegister SR = new Sim_Register();//SimRegisterInterface
         private ITaskManager STM = new Sim_Taskmanager(); //SimTaskManagerInterface
         //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
             DataTable simDt;
             switch (id)
             {
-                case 1: simDt = SR.GetSimReg();//DataTable
+                case 1: simDt = SR.GetReg();//DataTable
                     break;
                 case 2:
                     simDt = SR.GetSelectedReg(simSelRegArray);//DataTable
@@ -63,7 +63,7 @@ namespace WebAPI.Controllers
             {
                 case 1: SimArray = SR.GetAllReg();
                         break;
-                case 2: SimArray = SR.Sim_RobotInfo();
+                case 2: SimArray = SR.RobotInfo();
                         break;
                 default: SimArray = new [] {"Fault"};
                         break;

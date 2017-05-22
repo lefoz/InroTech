@@ -5,17 +5,17 @@ using System.Linq;
 using Inrotech.Domain.Register;
 namespace Inrotech.Domain.Register
 {
-    public class Sim_Register : ISim_Register
+    public class Sim_Register : IRegister
     {
         private DataTable SimReg;
         private DataTable SimRegSelected;
 
         public Sim_Register()
         {
-            GetSimReg();
+            GetReg();
         }
         
-        public DataTable GetSimReg()
+        public DataTable GetReg()
         {
             SimReg = new DataTable();
             SimReg.Clear();
@@ -37,7 +37,7 @@ namespace Inrotech.Domain.Register
         public DataTable GetSelectedReg(string[] selItems)
         {
                 //Console.WriteLine(selItems.Tostring);
-                DataTable old = GetSimReg();
+                DataTable old = GetReg();
                 SimRegSelected = old.Clone();
             foreach (DataRow row in old.Rows)
             {
@@ -74,7 +74,7 @@ namespace Inrotech.Domain.Register
         public string[] GetAllReg()
         {
             
-            DataTable old = GetSimReg();
+            DataTable old = GetReg();
             var regList = new List<string>();
             foreach (DataRow row in old.Rows)
             {
@@ -97,6 +97,11 @@ namespace Inrotech.Domain.Register
         {
             String[] SimInfo = new string[]{"Simulate Robot", "localhost:53982","SimJob", "SimProgress" };
             return SimInfo;
+        }
+
+        public string[] RobotInfo()
+        {
+            throw new NotImplementedException();
         }
     }
 }
