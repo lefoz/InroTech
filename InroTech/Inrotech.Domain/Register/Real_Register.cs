@@ -6,7 +6,7 @@ using Inrotech.Domain.Register;
 using Inrotech.Domain.Components.Robot;
 namespace Inrotech.Real_Register
 {
-    public class Real_Register
+    public class Real_Register : IReal_Register
     {
         private DataTable Reg;
         private DataTable RegSelected;
@@ -75,9 +75,10 @@ namespace Inrotech.Real_Register
         private DataTable getRobotData(string[] incomingArr)
         {
 
-            Robot r = new Robot(incomingArr); //TESTTESTTEST BAD CONNECTION
+            //Robot r = new Robot(incomingArr); //TESTTESTTEST BAD CONNECTION
 
-            return r.getSelectedData; //LAV OM!!!
+            //return r.getSelectedData; //LAV OM!!!
+            return null;
         }
 
         public string[] GetAllReg()
