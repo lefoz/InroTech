@@ -8,7 +8,6 @@ namespace Inrotech.Domain.Components.Robot
 {
     public class Robot
     {
-
         //vars
         private Core objCore;
         private FRRJIf.DataTable objDataTable1;

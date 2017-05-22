@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Inrotech.Domain.Taskmanager
 {
-  public class Sim_Taskmanager : ITaskManager
+  public class Sim_TaskManager : ITaskManager
     {
         private DataTable tasks_DT;
-        public Sim_Taskmanager()
+        public Sim_TaskManager()
         {
             DataTable newTaskDT = new DataTable();
             newTaskDT.Clear();
@@ -26,7 +26,7 @@ namespace Inrotech.Domain.Taskmanager
             this.tasks_DT = newTaskDT;
         }
 
-        public DataTable getTaskmanager()
+        public DataTable getTaskManager()
         {
             return tasks_DT;
         }
