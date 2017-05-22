@@ -1,13 +1,13 @@
 ﻿using System.Data;
 
-namespace Inrotech.Domain.Register
+namespace Inrotech.Real_Register
 {
-    public interface ISim_Register
+    public interface IReal_Register
     {
         string[] GetAllReg();
+        DataTable GetReg();
         DataTable GetSelectedReg(string[] selItems);
-        DataTable GetSimReg();
         void RegArrayTester(string[] test);
-        string[] Sim_RobotInfo();
+        string[] RobotInfo();
     }
 }

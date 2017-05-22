@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
     public class ValuesController : Controller
     {
         private IGraph SG = new Sim_Graph();//SimGraphInterface
-        private Sim_Register SR = new Sim_Register();//SimRegisterInterface
+        private ISim_Register SR = new Sim_Register();//SimRegisterInterface
         private ITaskmanager STM = new Sim_Taskmanager(); //SimTaskManagerInterface
         //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};

@@ -6,7 +6,7 @@ using Inrotech.Domain.Register;
 using Inrotech.Domain.Components.Robot;
 namespace Inrotech.Real_Register
 {
-    public class Real_Register
+    public class Real_Register : IReal_Register
     {
         private DataTable Reg;
         private DataTable RegSelected;
