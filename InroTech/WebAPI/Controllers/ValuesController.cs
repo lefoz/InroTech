@@ -7,6 +7,7 @@ using Inrotech.Domain.Graph;
 using Inrotech.Domain.Register;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Scaffolding;
+using Inrotech.Domain.Taskmanager;
 
 namespace WebAPI.Controllers
 {
@@ -15,7 +16,7 @@ namespace WebAPI.Controllers
     {
         private IGraph SG = new Sim_Graph();//SimGraphInterface
         private Sim_Register SR = new Sim_Register();//SimRegisterInterface
-      //private Sim_TaskManager = ScaffoldingTypeMapper = new ;//SimTaskManagerInterface
+        private ITaskmanager STM = new Sim_Taskmanager(); //SimTaskManagerInterface
         //private string[] simFullRegArray;
         private static string[] simSelRegArray; //= {"025", "055"};
 
@@ -45,6 +46,15 @@ namespace WebAPI.Controllers
             return simDt;
         }
 
+          ITaskmanager tasks = new Sim_Taskmanager();
+        
+        // GET: api/taskmanager
+        [HttpGet("taskmanager/")]
+        public DataTable GetTaskmanager()
+        {
+            return STM.getTaskmanager(); ;
+        }
+
         [HttpGet("getarray/{id}")]
         public string[] GetValues(int id)
         {
@@ -70,8 +80,6 @@ namespace WebAPI.Controllers
             {
                 //SR.RegArrayTester(values);
                 simSelRegArray = values;
-
-
             }
            
         }
