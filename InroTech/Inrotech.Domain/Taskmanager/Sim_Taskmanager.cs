@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Inrotech.Domain.Taskmanager
 {
-  public class Sim_Taskmanager : ITaskmanager
+  public class Sim_Taskmanager : ITaskmanager, ITaskmanager
     {
         private DataTable tasks_DT;
         public Sim_Taskmanager()
