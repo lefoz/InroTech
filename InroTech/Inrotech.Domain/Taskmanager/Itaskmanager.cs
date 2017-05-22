@@ -2,9 +2,8 @@
 
 namespace Inrotech.Domain.Taskmanager
 {
-    public interface ITaskmanager
+    public interface ITaskManager
     {
         DataTable getTaskmanager();
-        void SetTaskmanager();
     }
 }
