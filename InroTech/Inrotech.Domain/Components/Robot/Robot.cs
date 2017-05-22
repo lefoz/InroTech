@@ -62,7 +62,6 @@ namespace Inrotech.Domain.Components.Robot
             //tjek om der er hul igennem til DLL
             if (objCore == null)
             {
-                objDataTable1.Kill
                 //connect
                 connectRobot(targetHost);
             }
