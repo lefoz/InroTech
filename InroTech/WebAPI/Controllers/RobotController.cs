@@ -13,25 +13,46 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class RobotController : Controller
     {
-        private IGraph GI = new Graph();//GraphInterface
       //private Register RI = new ;//RegisterInterface
       //private Taskmanager TMI = new ;//TaskmanagerInterface
         
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
+        Robot n = null;
+        bool isConnect = false;
+
+
         // GET: api/Robot
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            return GI.GetGraph();
+            if (isConnect)
+            {
+                n.refreshPrompt();
+            }
+            return n.GetGraph();
            
         }
 
         // GET: api/robot/value 
-        [HttpGet("{robotip}:{camip}")]
+        [HttpGet("setrobot/{robotip}:{camip}")]
         public string Get(string robotip, string camip)
         {
+            try
+            {
+                n.getInstance();
+
+                n.startConnect(robotip);
+                isConnect = n.getIsConnected;
+            }
+            catch
+            {
+                Console.WriteLine("catch error");
+            }
+            
+
+
             //kald til IRobot med robot ip
             //skal ikke sende kamera ip
             //skal returnere bool fra robot hvis conn.
@@ -44,14 +65,36 @@ namespace WebAPI.Controllers
         {
             switch (id)
             {
-                //case 1:
-                //    FullRegArray = SR.GetAllReg();
-                //    break;
+                case 1:
+                    FullRegArray = n.getAllReg;
+                    break;
+                case 2:
+                    FullRegArray = n.getRobotInfo;
+                    break;
                 default:
                     FullRegArray = new[] { "Fault" };
                     break;
             }
             return FullRegArray;
+        }
+
+        // GET api/values/#
+        [HttpGet("{id}")]
+        public DataTable Get(int id)
+        {
+            DataTable simDt;
+            switch (id)
+            {
+                case 1: simDt = SR.GetReg();//DataTable
+                    break;
+                case 2:
+                    simDt = SR.GetSelectedReg(simSelRegArray);//DataTable
+                    break;
+                default:
+                    simDt = new DataTable();
+                    break;
+            }
+            return simDt;
         }
 
         // POST: api/Robot

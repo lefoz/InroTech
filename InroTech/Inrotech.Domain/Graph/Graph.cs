@@ -9,15 +9,23 @@ namespace Inrotech.Domain.Graph
     {
         Dictionary<string, int> GraphData;
 
-        public Graph()
+        int v;
+        int a;
+
+        public Graph(int volt, int amps)
         {
             GraphData = new Dictionary<string, int>();
+            v = volt;
+            a = amps;
           
         }
 
         public Dictionary<string,int> GetGraph()
         {
-            throw new NotImplementedException();
+            GraphData.Add("volt", v);
+            GraphData.Add("amp", a);
+
+            return GraphData;
         }
     }
 }

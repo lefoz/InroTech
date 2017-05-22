@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using FRRJIf;
-    
+using Inrotech.Domain.Graph;
+using Inrotech.Domain.Register;
+
 namespace Inrotech.Domain.Components.Robot
 {
     public class Robot
@@ -13,6 +15,8 @@ namespace Inrotech.Domain.Components.Robot
         private Core objCore;
         private FRRJIf.DataTable objDataTable1;
         private DataNumReg[] objSelectedReg;
+        private DataNumReg numRegJob;
+        private DataNumReg numRegofJob;
         private DataTask[] objTaskList;
 
         private string hostName = null;
@@ -22,32 +26,33 @@ namespace Inrotech.Domain.Components.Robot
         private string[] taskArr;
         private int voltage;
         private int amp;
+        private string job = "";
+        private string ofJob = "";
+
+        private Real_Register reg;
+
 
         private bool isConnected = false;//has class been connected?
         private bool isInit = false; //has class been initialized?
 
         //constructor private for singleton
         private Robot()
-        {            
+        {
+            reg = new Real_Register();
         }
         private static Robot instance = null;
-        private static readonly object _lock = new object();
         //get instance of class
-        public static Robot getInstance()
+        public Robot getInstance()
         {
-            //multi-threaded lock
-            lock (_lock)
+            if (instance == null)
             {
-                if (instance == null)
-                {
-                    instance = new Robot();
-                }
-            }            
-            return instance;
+                instance = new Robot();
+            }      
+        return instance;
         }
         
         //call this from outside with target IP
-        private void startConnect(string targetHost)
+        public void startConnect(string targetHost)
         {
             hostName = targetHost;
 
@@ -68,11 +73,12 @@ namespace Inrotech.Domain.Components.Robot
         private void refresh_dt1()
         {
             //init
-            short intLine = 0, intState = 0;            
-            object vntValue = null;
+            short intLine = 0, intState = 0;
+            object vntValue = null, jobValue = null;
             string strProg = "", strParentProg = "";
             Array lngAI = new int[2];
             bool validRefresh = false;
+            
 
             validRefresh = objDataTable1.Refresh();
             //if refresh failed, disconnect
@@ -127,6 +133,17 @@ namespace Inrotech.Domain.Components.Robot
                 }
                 voltage = (int) lngAI.GetValue(1);
                 amp = (int) lngAI.GetValue(0);
+
+                //tasknr & tasknr of total tasks
+                if (numRegJob.GetValue(0, ref jobValue) == true)
+                {
+                    job = "" + jobValue;
+                }
+                if (numRegofJob.GetValue(0, ref jobValue) == true)
+                {
+                    ofJob = "" + jobValue;
+                }
+                
             }
         }
 
@@ -154,10 +171,17 @@ namespace Inrotech.Domain.Components.Robot
             voltage = 0;
             amp = 0;
 
+            
+
+
             try
             {
                 //Set FANUC datatable1
                 objDataTable1 = objCore.get_DataTable();
+
+                //robotinfo
+                numRegJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 2, 2);
+                numRegofJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 3, 3);
 
                 //selected numregs
                 for (int i = 0; i < objSelectedReg.Length; i++)
@@ -179,12 +203,6 @@ namespace Inrotech.Domain.Components.Robot
                 //handle ex
                 Console.WriteLine(ex.ToString());
             }
-        }
-
-        public void subClear()
-        {
-            //dt_Selected.Clear();
-            //clear init vars
         }
 
         private void connectRobot(string target)
@@ -214,7 +232,9 @@ namespace Inrotech.Domain.Components.Robot
                 timeOut = 5000; //time out value         
                 if (timeOut > 0)
                     objCore.set_TimeOutValue(timeOut);
+
                 connectSuccess = objCore.Connect(strHost);
+
                 if (connectSuccess == false)
                 {
                     //disconnected
@@ -254,15 +274,35 @@ namespace Inrotech.Domain.Components.Robot
         public int getVoltage { get => voltage; }
         public int getAmp { get => amp; }
         public System.Data.DataTable getSelectedData { get => dt_Selected; }
+        public bool getIsConnected { get => isConnected; }
+        public string[] getAllReg { get => reg.GetAllReg(); }
+        public string[] getRobotInfo { get => reg.RobotInfo("Robot", hostName, job, ofJob); }
 
         public void refreshPrompt()
         {
             refresh_dt1();
         }
 
+        public void subClear()
+        {
+            //dt_Selected.Clear();
+            //clear init vars
+        }
+
+
+        public Dictionary<string, int> GetGraph()
+        {
+            Dictionary<string, int> d = new Dictionary<string, int>();
+
+            d.Add("volt", voltage);
+            d.Add("amp", amp);
+
+            return d;
+        }
+
 
         //TEST EXECUTION METHODS
-        public void StartTest(string IP)
+        /*public void StartTest(string IP)
         {
             Console.WriteLine("Trying to connect");
             startConnect(IP);
@@ -270,7 +310,8 @@ namespace Inrotech.Domain.Components.Robot
             System.Threading.Thread.Sleep(500);
             Console.WriteLine("Refresh prompted");
             refresh_dt1();
-        }        
+        }         
+        */
         //DATA TYPES for debugging
         /* debugging
         private string StrTask(int Index, string strProg, short intLine, short intState, string strParentProg)
