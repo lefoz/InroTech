@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Inrotech.Domain.Register;
+using Inrotech.Domain.Components.Robot;
 namespace Inrotech.Real_Register
 {
     public class Real_Register
@@ -26,16 +27,19 @@ namespace Inrotech.Real_Register
             Reg.Columns.Add("Selected", typeof(bool));
             for (int i = 0; i < 500; i++)
             {
-                Reg.Rows.Add(new object[] { i, 999, 999, false });
+                Reg.Rows.Add(new object[] { i+1, 999, 999, false });
             }
             return Reg;
         }
 
         public DataTable GetSelectedReg(string[] selItems)
         {
+            int[] forwardArr = new int[selItems.Length];
+
             //Console.WriteLine(selItems.Tostring);
             DataTable old = GetReg();
             RegSelected = old.Clone();
+            //nulstil
             foreach (DataRow row in old.Rows)
             {
                 row["Selected"] = false;
@@ -54,14 +58,26 @@ namespace Inrotech.Real_Register
                  }
                 foreach (DataRow row in old.Rows)
                 {
-
                     if (row["Selected"].Equals(true))
                     {
-                        RegSelected.ImportRow(row);
+                        
+                        forwardArr[(int)row["id"]-1] = (int)row["Registry"];
+
+
                     }
                 }
             }
+
+
             return RegSelected;
+        }
+
+        private DataTable getRobotData(string[] incomingArr)
+        {
+
+            Robot r = new Robot(incomingArr); //TESTTESTTEST BAD CONNECTION
+
+            return r.getSelectedData; //LAV OM!!!
         }
 
         public string[] GetAllReg()
@@ -84,6 +100,12 @@ namespace Inrotech.Real_Register
             {
                 Console.WriteLine(item);
             }
+        }
+
+        public String[] RobotInfo()
+        {
+            String[] SimInfo = new string[] { "Simulate Robot", "localhost:53982", "SimJob", "SimProgress" };
+            return SimInfo;
         }
     }
 }
