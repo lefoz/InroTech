@@ -36,7 +36,7 @@ namespace Inrotech.Domain.Register
 
         public DataTable GetSelectedReg(string[] selItems)
         {
-                //Console.WriteLine(selItems.Tostring);
+                
                 DataTable old = GetReg();
                 SimRegSelected = old.Clone();
             foreach (DataRow row in old.Rows)
@@ -93,15 +93,12 @@ namespace Inrotech.Domain.Register
             }
         }
 
-        public String[] Sim_RobotInfo()
+        public String[] RobotInfo()
         {
             String[] SimInfo = new string[]{"Simulate Robot", "localhost:53982","SimJob", "SimProgress" };
             return SimInfo;
         }
 
-        public string[] RobotInfo()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
