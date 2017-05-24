@@ -16,6 +16,7 @@ namespace Inrotech.Domain.Components.Robot
         private DataNumReg[] objSelectedReg;
         private DataNumReg numRegJob;
         private DataNumReg numRegofJob;
+        private DataNumReg objRobotName;
         private DataTask[] objTaskList;
 
         private string hostName = null;
@@ -27,31 +28,23 @@ namespace Inrotech.Domain.Components.Robot
         private int amp;
         private string job = "";
         private string ofJob = "";
+        private string robotName = "";
 
         private Real_Register reg;
 
+        
 
         private bool isConnected = false;//has class been connected?
         private bool isInit = false; //has class been initialized?
 
         //constructor private for singleton
-        private Robot()
+        public Robot()
         {
             reg = new Real_Register();
-        }
-        private static Robot instance = null;
-        //get instance of class
-        public Robot getInstance()
-        {
-            if (instance == null)
-            {
-                instance = new Robot();
-            }      
-        return instance;
-        }
+        }        
         
         //call this from outside with target IP
-        public void startConnect(string targetHost)
+        public bool startConnect(string targetHost)
         {
             hostName = targetHost;
 
@@ -59,13 +52,17 @@ namespace Inrotech.Domain.Components.Robot
             if (objCore == null)
             {
                 //connect
-                connectRobot(targetHost);
+                if(connectRobot(targetHost))
+                {
+                    return true;
+                }
             }
             else
             {
                 //disconnect
                 Console.WriteLine("Disconnected");
             }
+            return false;
         }
                  
         //refresh datatable1
@@ -73,13 +70,16 @@ namespace Inrotech.Domain.Components.Robot
         {
             //init
             short intLine = 0, intState = 0;
-            object vntValue = null, jobValue = null;
+            object vntValue = null, jobValue = null, nameValue = null;
             string strProg = "", strParentProg = "";
             Array lngAI = new int[2];
             bool validRefresh = false;
-            
 
+            var dtTemp = dt_Selected.Clone();
+
+            //datatable gets refreshed
             validRefresh = objDataTable1.Refresh();
+
             //if refresh failed, disconnect
             if (validRefresh == false)
             {
@@ -95,14 +95,16 @@ namespace Inrotech.Domain.Components.Robot
                 if (objSelectedReg[i].GetValue(selectedRegArr[i], ref vntValue) == true)
                 {
                     //add data to return-datatable  {id,regnr,value,bool}
-                    dt_Selected.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], vntValue, false});
+                    dtTemp.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], vntValue, false});
                 }
                 else
                 {
-                    dt_Selected.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], null, false});
+                    dtTemp.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], null, false});
                 }
             }
+            dt_Selected = dtTemp;
             
+
             //TASKS
             for (int i = objTaskList.GetLowerBound(0); i <= objTaskList.GetUpperBound(0); i++)
             {
@@ -120,6 +122,7 @@ namespace Inrotech.Domain.Components.Robot
                     taskArr[i] = "TASK " + objTaskList[i].Index + "  -  ERROR";
                 }
             }
+
             //ANALOG IO
             //read AnalogOut - offset 1000 to get AO as in FANUC documentation
             {
@@ -132,22 +135,25 @@ namespace Inrotech.Domain.Components.Robot
                 }
                 voltage = (int) lngAI.GetValue(1);
                 amp = (int) lngAI.GetValue(0);
+            }
 
-                //tasknr & tasknr of total tasks
-                if (numRegJob.GetValue(0, ref jobValue) == true)
-                {
-                    job = "" + jobValue;
-                }
-                if (numRegofJob.GetValue(0, ref jobValue) == true)
-                {
-                    ofJob = "" + jobValue;
-                }
-                
+            //TASKNR of total tasks & NAME
+            if (numRegJob.GetValue(0, ref jobValue) == true)
+            {
+                job = "" + jobValue;
+            }
+            if (numRegofJob.GetValue(0, ref jobValue) == true)
+            {
+                ofJob = "" + jobValue;
+            }
+            if(objRobotName.GetValue(0, ref nameValue) == true)
+            {
+                robotName = "" + nameValue;
             }
         }
 
         //INITIALIZE, CONNECT, CONSTRUCT DATATABLES
-        private void subInit(string[] selectedReg)
+        public void subInit(string[] selectedReg)
         {
 
             objSelectedReg = new FRRJIf.DataNumReg[selectedReg.Length];
@@ -170,9 +176,6 @@ namespace Inrotech.Domain.Components.Robot
             voltage = 0;
             amp = 0;
 
-            
-
-
             try
             {
                 //Set FANUC datatable1
@@ -181,6 +184,7 @@ namespace Inrotech.Domain.Components.Robot
                 //robotinfo
                 numRegJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 2, 2);
                 numRegofJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 3, 3);
+                objRobotName = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 5, 5);
 
                 //selected numregs
                 for (int i = 0; i < objSelectedReg.Length; i++)
@@ -204,7 +208,7 @@ namespace Inrotech.Domain.Components.Robot
             }
         }
 
-        private void connectRobot(string target)
+        private bool connectRobot(string target)
         {
             //method vars
             bool connectSuccess = false;
@@ -225,26 +229,27 @@ namespace Inrotech.Domain.Components.Robot
                 else
                 {
                     strHost = hostName;
-                }
 
-                //CONNECTING
-                timeOut = 5000; //time out value         
-                if (timeOut > 0)
-                    objCore.set_TimeOutValue(timeOut);
+                    //CONNECTING
+                    timeOut = 5000; //time out value         
+                    if (timeOut > 0)
+                        objCore.set_TimeOutValue(timeOut);
 
-                connectSuccess = objCore.Connect(strHost);
+                    connectSuccess = objCore.Connect(strHost);
 
-                if (connectSuccess == false)
-                {
-                    //disconnected
-                    Console.WriteLine("Disconnected");
-                    objCore.Disconnect();
-                }
-                else
-                {
-                    //connected
-                    Console.WriteLine("Connected");
-                    isConnected = true;
+                    if (connectSuccess == false)
+                    {
+                        //disconnected
+                        Console.WriteLine("Disconnected");
+                        objCore.Disconnect();
+                    }
+                    else
+                    {
+                        //connected
+                        Console.WriteLine("Connected");
+                        isConnected = true;
+                        return true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -252,6 +257,7 @@ namespace Inrotech.Domain.Components.Robot
                 //handle ex
                 Console.WriteLine(ex.ToString());
             }
+            return false;
         }
 
         // ----------- test
@@ -272,20 +278,51 @@ namespace Inrotech.Domain.Components.Robot
         public string[] getTaskArr { get => taskArr; }
         public int getVoltage { get => voltage; }
         public int getAmp { get => amp; }
-        public System.Data.DataTable getSelectedData { get => dt_Selected; }
-        public bool getIsConnected { get => isConnected; }
+        public System.Data.DataTable getSelectedData { get => dt_Selected; }//return datatable with selected regs
+        public bool getIsConnected { get => isConnected; }//true if bool isconnected == true
+
+        //get fullreg method on real_reg instance
         public string[] getAllReg { get => reg.GetAllReg(); }
-        public string[] getRobotInfo { get => reg.RobotInfo("Robot", hostName, job, ofJob); }
+        public System.Data.DataTable getReg { get => reg.GetReg(); }
+        //get robot info from numregs
+        public string[] getRobotInfo { get => reg.RobotInfo(robotName, hostName, job, ofJob); }
 
         public void refreshPrompt()
         {
             refresh_dt1();
         }
 
-        public void subClear()
+        public bool subClear()
         {
-            //dt_Selected.Clear();
-            //clear init vars
+            //attempt disconnect
+            bool succes = objCore.Disconnect();
+            if (succes)
+            {
+                isConnected = false;
+
+                //clear local objects
+                
+                    objCore = null;
+                    objDataTable1.Clear();
+                    dt_Selected.Clear();
+
+                if (startConnect(hostName))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+                
+                
+            }
+            else
+            {
+                isConnected = true;
+                return false;
+            }   
         }
 
 
