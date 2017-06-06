@@ -41,8 +41,9 @@ namespace Inrotech.Domain.Components.Robot
         public Robot()
         {
             reg = new Real_Register();
-        }        
-        
+        }
+
+
         //call this from outside with target IP
         public bool startConnect(string targetHost)
         {

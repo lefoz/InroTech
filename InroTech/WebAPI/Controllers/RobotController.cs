@@ -12,10 +12,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     public class RobotController : Controller
-    {
-      //private Register RI = new ;//RegisterInterface
-      //private Taskmanager TMI = new ;//TaskmanagerInterface
-        
+    {        
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
@@ -41,7 +38,6 @@ namespace WebAPI.Controllers
             try
             {
                 n = new Robot();
-
                 n.startConnect(robotip);
                 while(n.getIsConnected == false)
                 {
@@ -60,7 +56,7 @@ namespace WebAPI.Controllers
             {
                 Console.WriteLine("catch error");
             }
-
+            Console.Write("thou shall not pass");
             //kald til IRobot med robot ip
             //skal ikke sende kamera ip
             //skal returnere bool fra robot hvis conn.

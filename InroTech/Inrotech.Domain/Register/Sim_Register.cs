@@ -93,15 +93,10 @@ namespace Inrotech.Domain.Register
             }
         }
 
-        public String[] Sim_RobotInfo()
-        {
-            String[] SimInfo = new string[]{"Simulate Robot", "localhost:53982","SimJob", "SimProgress" };
-            return SimInfo;
-        }
-
         public string[] RobotInfo()
         {
-            throw new NotImplementedException();
+            String[] SimInfo = new string[] { "Simulate Robot", "localhost:53982", "SimJob", "SimProgress" };
+            return SimInfo;
         }
     }
 }
