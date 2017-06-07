@@ -116,6 +116,9 @@ namespace WebAPI.Controllers
             {                
                 SelRegArray = values;
 
+                try
+                {
+
                 if (n.subClear())
                 {
                     isConnect = false;
@@ -133,6 +136,11 @@ namespace WebAPI.Controllers
                 if (isConnect)
                 {
                     n.subInit(values);
+                }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("catch error");
                 }
             }
         }
