@@ -19,19 +19,26 @@ namespace TestApp
             arr[2] = rnd.Next(1, 500).ToString();
             arr[3] = rnd.Next(1, 500).ToString();
             arr[4] = rnd.Next(1, 500).ToString();
+            arr[5] = rnd.Next(1, 500).ToString();
+            arr[6] = rnd.Next(1, 500).ToString();
+            arr[7] = rnd.Next(1, 500).ToString();
+            arr[8] = rnd.Next(1, 500).ToString();
+            arr[9] = rnd.Next(1, 500).ToString();
 
 
-            //Robot r = new Robot();
-            //r.StartTest("192.168.117.40");           
+            Robot r = new Robot();
+            r.subInit(arr);
+            r. startConnect("192.168.117.40");           
 
             int i = 0;
             while (true)
             {                
                 i++;
                 Console.WriteLine("Refresh " + i + " prompted");
-                //r.refreshPrompt();
+                r.refreshTest();
                 Console.ReadKey();
             }
+            
 
 
         }

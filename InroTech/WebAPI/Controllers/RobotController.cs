@@ -27,11 +27,14 @@ namespace WebAPI.Controllers
         [HttpGet]
         public Dictionary<string, int> Get()
         {
+            var dic = new Dictionary<string, int>();
             if (isConnect)
             {
+                //refresh locally on robot
+                dic = n.GetGraph();
                 n.refreshPrompt();
             }
-            return n.GetGraph();           
+            return dic;        
         }
 
         // GET: api/robot/value 
@@ -40,21 +43,21 @@ namespace WebAPI.Controllers
         {
             try
             {
-                n = new Robot();
+                string[] arr = new string[10];
 
-                n.startConnect(robotip);
-                while(n.getIsConnected == false)
-                {
-                    int i = 0;
+                n = new Robot();
+                n.subInit(arr);
+
+                int i = 0;
+                while (!n.startConnect(robotip))
+                {                    
                     //wait
                     Console.WriteLine("waiting for connect.. " + i);
                     i++;
                     System.Threading.Thread.Sleep(100);
-                }
-                if (n.getIsConnected)
-                {
-                    isConnect = true;
-                }
+                }       
+                isConnect = true;
+                return true;
             }
             catch
             {
@@ -65,7 +68,7 @@ namespace WebAPI.Controllers
             //skal ikke sende kamera ip
             //skal returnere bool fra robot hvis conn.
             // for testing purpose
-            return n.getIsConnected;
+            return false;
         }
 
         [HttpGet("getarray/{id}")]
@@ -119,12 +122,12 @@ namespace WebAPI.Controllers
                 if (n.subClear())
                 {
                     isConnect = false;
-                }           
+                }
                 //init robot with string[] to define FRRJIf.DataTable size
                 //init datatables specifically for selected values
-                while(isConnect == false)
-                {
-                    int i = 0;
+                int i = 0;
+                while (isConnect == false)
+                {                    
                     //wait
                     Console.WriteLine("waiting for connection.. " + i);
                     i++;

@@ -36,16 +36,15 @@ namespace Inrotech.Domain.Register
 
         public DataTable GetSelectedReg(string[] selItems)
         {
-                //Console.WriteLine(selItems.Tostring);
-                DataTable old = GetReg();
-                SimRegSelected = old.Clone();
+            DataTable old = GetReg();
+            SimRegSelected = old.Clone();
+
             foreach (DataRow row in old.Rows)
             {
                 row["Selected"] = false;
             }
             if (selItems != null)
             {
-
                 foreach (var item in selItems)
                 {
                     int reg = Convert.ToInt32(item);
@@ -55,18 +54,14 @@ namespace Inrotech.Domain.Register
                         DataRow row = old.Select("Registry = '" + reg + "'").FirstOrDefault();
                         row["Selected"] = true;
                     }
-                   
-
                 }
                 foreach (DataRow row in old.Rows)
                 {
-
                     if (row["Selected"].Equals(true))
                     {
                         SimRegSelected.ImportRow(row);
                     }
                 }
-
             }
             return SimRegSelected;
         }
