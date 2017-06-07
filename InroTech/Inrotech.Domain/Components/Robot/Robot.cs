@@ -32,40 +32,37 @@ namespace Inrotech.Domain.Components.Robot
 
         private Real_Register reg;
 
-        
-
         private bool isConnected = false;//has class been connected?
         private bool isInit = false; //has class been initialized?
 
+        //public static Robot instance;
         //constructor private for singleton
         public Robot()
         {
             reg = new Real_Register();
         }
-
+        /*public Robot Instance()
+        {
+            if (instance == null)
+            {
+                instance = new Robot();
+            }
+            return instance;
+        }*/
 
         //call this from outside with target IP
         public bool startConnect(string targetHost)
         {
             hostName = targetHost;
 
-            //tjek om der er hul igennem til DLL
-            if (objCore == null)
+            //connect
+            if (connectRobot(targetHost))
             {
-                //connect
-                if(connectRobot(targetHost))
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                //disconnect
-                Console.WriteLine("Disconnected");
+                return true;
             }
             return false;
         }
-                 
+
         //refresh datatable1
         private void refresh_dt1()
         {
@@ -91,20 +88,20 @@ namespace Inrotech.Domain.Components.Robot
 
             //DATA FORMATTING
             //NUMERIC REGISTERS
-            for (int i = 0; i <= objSelectedReg.Length-1; i++)
+            for (int i = 0; i <= objSelectedReg.Length - 1; i++)
             {
                 if (objSelectedReg[i].GetValue(selectedRegArr[i], ref vntValue) == true)
                 {
                     //add data to return-datatable  {id,regnr,value,bool}
-                    dtTemp.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], vntValue, false});
+                    dtTemp.Rows.Add(new object[] { selectedRegArr[i], selectedRegArr[i], vntValue, false });
                 }
                 else
                 {
-                    dtTemp.Rows.Add(new object[] {selectedRegArr[i], selectedRegArr[i], null, false});
+                    dtTemp.Rows.Add(new object[] { selectedRegArr[i], selectedRegArr[i], null, false });
                 }
             }
             dt_Selected = dtTemp;
-            
+
 
             //TASKS
             for (int i = objTaskList.GetLowerBound(0); i <= objTaskList.GetUpperBound(0); i++)
@@ -116,7 +113,7 @@ namespace Inrotech.Domain.Components.Robot
                     {
                         break;
                     }
-                    taskArr[i] = "TASK " + objTaskList[i].Index + "  -  Program: " + strProg + "  -  Line: " + intLine + "  -  State: "+ intState + "  -  Parent: " + strParentProg;
+                    taskArr[i] = "TASK " + objTaskList[i].Index + "  -  Program: " + strProg + "  -  Line: " + intLine + "  -  State: " + intState + "  -  Parent: " + strParentProg;
                 }
                 else
                 {
@@ -134,8 +131,8 @@ namespace Inrotech.Domain.Components.Robot
                     objCore.Disconnect();
                     return;
                 }
-                voltage = (int) lngAI.GetValue(1);
-                amp = (int) lngAI.GetValue(0);
+                voltage = (int)lngAI.GetValue(1);
+                amp = (int)lngAI.GetValue(0);
             }
 
             //TASKNR of total tasks & NAME
@@ -147,7 +144,7 @@ namespace Inrotech.Domain.Components.Robot
             {
                 ofJob = "" + jobValue;
             }
-            if(objRobotName.GetValue(0, ref nameValue) == true)
+            if (objRobotName.GetValue(0, ref nameValue) == true)
             {
                 robotName = "" + nameValue;
             }
@@ -156,56 +153,65 @@ namespace Inrotech.Domain.Components.Robot
         //INITIALIZE, CONNECT, CONSTRUCT DATATABLES
         public void subInit(string[] selectedReg)
         {
-
-            objSelectedReg = new FRRJIf.DataNumReg[selectedReg.Length];
-
-            //parse string[] to int[]
-            selectedRegArr = Array.ConvertAll(selectedReg, int.Parse);
-
-            //tasklist return object
-            taskArr = new string[10];
-
-            //init datatable return objects
-            dt_Selected = new System.Data.DataTable();
-            dt_Selected.Clear();
-            dt_Selected.Columns.Add("id", typeof(int));
-            dt_Selected.Columns.Add("Registry", typeof(int));
-            dt_Selected.Columns.Add("Value", typeof(double));
-            dt_Selected.Columns.Add("Selected", typeof(bool));
-
-            //welding params
-            voltage = 0;
-            amp = 0;
-
+            //Set core
             try
             {
-                //Set FANUC datatable1
-                objDataTable1 = objCore.get_DataTable();
+                objCore = new FRRJIf.Core();
 
-                //robotinfo
-                numRegJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 2, 2);
-                numRegofJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 3, 3);
-                objRobotName = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 5, 5);
+                objSelectedReg = new FRRJIf.DataNumReg[selectedReg.Length];
 
-                //selected numregs
-                for (int i = 0; i < objSelectedReg.Length; i++)
+                //parse string[] to int[]
+                selectedRegArr = Array.ConvertAll(selectedReg, int.Parse);
+
+                //tasklist return object
+                taskArr = new string[10];
+
+                //init datatable return objects
+                dt_Selected = new System.Data.DataTable();
+                dt_Selected.Clear();
+                dt_Selected.Columns.Add("id", typeof(int));
+                dt_Selected.Columns.Add("Registry", typeof(int));
+                dt_Selected.Columns.Add("Value", typeof(double));
+                dt_Selected.Columns.Add("Selected", typeof(bool));
+
+                //welding params
+                voltage = 0;
+                amp = 0;
+
+                try
                 {
-                    objSelectedReg[i] = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, selectedRegArr[i], selectedRegArr[i]);
-                }
+                    //Set FANUC datatable1
+                    objDataTable1 = objCore.get_DataTable();
 
-                //10 data tasks
-                objTaskList = new FRRJIf.DataTask[10];
-                for (int i = 0; i < objTaskList.Length; i++)
-                {
-                    objTaskList[i] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, i+1);
+                    //robotinfo
+                    numRegJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 2, 2);
+                    numRegofJob = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 3, 3);
+                    objRobotName = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, 5, 5);
+
+                    //selected numregs
+                    for (int i = 0; i < objSelectedReg.Length; i++)
+                    {
+                        objSelectedReg[i] = objDataTable1.AddNumReg(FRRJIf.FRIF_DATA_TYPE.NUMREG_INT, selectedRegArr[i], selectedRegArr[i]);
+                    }
+
+                    //10 data tasks
+                    objTaskList = new FRRJIf.DataTask[10];
+                    for (int i = 0; i < objTaskList.Length; i++)
+                    {
+                        objTaskList[i] = objDataTable1.AddTask(FRRJIf.FRIF_DATA_TYPE.TASK, i + 1);
+                    }
+                    isInit = true;
+                    return;
                 }
-                isInit = true;
-                return;
+                catch (Exception ex)
+                {
+                    //handle ex
+                    Console.WriteLine(ex.ToString());
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                //handle ex
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("error..");
             }
         }
 
@@ -218,9 +224,6 @@ namespace Inrotech.Domain.Components.Robot
 
             try
             {
-                //Set core
-                objCore = new FRRJIf.Core();
-
                 //HOSTNAME ON LOCAL NETWORK
                 if (string.IsNullOrEmpty(hostName))
                 {
@@ -232,11 +235,13 @@ namespace Inrotech.Domain.Components.Robot
                     strHost = hostName;
 
                     //CONNECTING
-                    timeOut = 5000; //time out value         
-                    if (timeOut > 0)
-                        objCore.set_TimeOutValue(timeOut);
+                    objCore.set_TimeOutValue(10000);
 
-                    connectSuccess = objCore.Connect(strHost);
+                    if (objCore.get_ProtectAvailable())
+                    {
+                        connectSuccess = objCore.Connect(strHost);
+                    }
+
 
                     if (connectSuccess == false)
                     {
@@ -264,12 +269,12 @@ namespace Inrotech.Domain.Components.Robot
         // ----------- test
         private void autoInit(string target, string[] selectedArr)
         {
-            if(isConnected == false)
+            if (isConnected == false)
             {
                 startConnect(target);
                 isInit = false;
-            }           
-            if(isInit == false)
+            }
+            if (isInit == false)
             {
                 subInit(selectedArr);
             }
@@ -302,10 +307,10 @@ namespace Inrotech.Domain.Components.Robot
                 isConnected = false;
 
                 //clear local objects
-                
-                    objCore = null;
-                    objDataTable1.Clear();
-                    dt_Selected.Clear();
+
+                objCore = null;
+                objDataTable1.Clear();
+                dt_Selected.Clear();
 
                 if (startConnect(hostName))
                 {
@@ -316,14 +321,14 @@ namespace Inrotech.Domain.Components.Robot
                     return false;
                 }
 
-                
-                
+
+
             }
             else
             {
                 isConnected = true;
                 return false;
-            }   
+            }
         }
 
 
@@ -350,7 +355,7 @@ namespace Inrotech.Domain.Components.Robot
         }         
         */
         //DATA TYPES for debugging
-        /* debugging
+        //debugging
         private string StrTask(int Index, string strProg, short intLine, short intState, string strParentProg)
         {
             string tmp = null;
@@ -362,8 +367,8 @@ namespace Inrotech.Domain.Components.Robot
             tmp = tmp + " Parent Program = \"" + strParentProg + "\"";
 
             return tmp + "\r\n";
-        
-        
+        }
+
         private string StrIO(string strIOType, short StartIndex, short EndIndex, ref Array values)
         {
             string tmp = null;
@@ -380,9 +385,9 @@ namespace Inrotech.Domain.Components.Robot
             }
             return tmp;
         }
-        */
+
         //test method
-        /*private void refresh()
+        public void refreshTest()
         {
             int ii = 0;
             short intLine = 0, intState = 0;
@@ -405,28 +410,19 @@ namespace Inrotech.Domain.Components.Robot
             //TESTDATA FORMATTING
             //Numregs
             strResult = strResult + "--- NumRegs ---\r\n";
-            for (ii = objNumReg.StartIndex; ii <= objNumReg.EndIndex; ii++)
+            for (int i = 0; i <= objSelectedReg.Length; i++)
             {
-                if (objNumReg.GetValue(ii, ref vntValue) == true)
+                if (objSelectedReg[i].GetValue(0, ref vntValue) == true)
                 {
-                    strResult = strResult + "R[" + ii + "] = " + vntValue + "\r\n";
+                    strResult = strResult + "R[" + selectedRegArr[i] + "] = " + vntValue + "\r\n";
                 }
                 else
                 {
-                    strResult = strResult + "R[" + ii + "] : Error!!! \r\n";
+                    strResult = strResult + "R[" + selectedRegArr[i] + "] : Error!!! \r\n";
                 }
+
             }
-            for (ii = objNumReg2.StartIndex; ii <= objNumReg2.EndIndex; ii++)
-            {
-                if (objNumReg2.GetValue(ii, ref vntValue) == true)
-                {
-                    strResult = strResult + "R[" + ii + "] = " + vntValue + "\r\n";
-                }
-                else
-                {
-                    strResult = strResult + "R[" + ii + "] : Error!!! \r\n";
-                }
-            }
+
             //Tasks
             strResult = strResult + "--- Tasks ---\r\n";
             for (int i = objTaskList.GetLowerBound(0); i <= objTaskList.GetUpperBound(0); i++)
@@ -466,6 +462,6 @@ namespace Inrotech.Domain.Components.Robot
                 strResult = strResult + StrIO("AI", 1, 2, ref lngAI) + "\r\n";
             }
             Console.WriteLine(strResult);
-        }*/
+        }
     }
 }
