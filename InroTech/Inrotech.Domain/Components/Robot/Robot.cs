@@ -281,7 +281,7 @@ namespace Inrotech.Domain.Components.Robot
         }
 
         //GETTERS
-        /*public string[] getTaskArr { get => taskArr; }
+        public string[] getTaskArr { get => taskArr; }
         public int getVoltage { get => voltage; }
         public int getAmp { get => amp; }
         public System.Data.DataTable getSelectedData { get => dt_Selected; }//return datatable with selected regs
@@ -292,7 +292,7 @@ namespace Inrotech.Domain.Components.Robot
         public System.Data.DataTable getReg { get => reg.GetReg(); }
         //get robot info from numregs
         public string[] getRobotInfo { get => reg.RobotInfo(robotName, hostName, job, ofJob); }
-        */
+        
 
         public void refreshPrompt()
         {
