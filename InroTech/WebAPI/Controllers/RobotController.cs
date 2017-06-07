@@ -77,6 +77,7 @@ namespace WebAPI.Controllers
                 case 2:
                     if (isConnect)
                         FullRegArray = n.getRobotInfo;
+                    else FullRegArray = new string[4]{"No Connection", "No Connection", "No Connection", "No Connection"};
                     break;
                 default:
                     FullRegArray = new[] { "Fault" };

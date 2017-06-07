@@ -281,7 +281,7 @@ namespace Inrotech.Domain.Components.Robot
         }
 
         //GETTERS
-        public string[] getTaskArr { get => taskArr; }
+        /*public string[] getTaskArr { get => taskArr; }
         public int getVoltage { get => voltage; }
         public int getAmp { get => amp; }
         public System.Data.DataTable getSelectedData { get => dt_Selected; }//return datatable with selected regs
@@ -292,6 +292,7 @@ namespace Inrotech.Domain.Components.Robot
         public System.Data.DataTable getReg { get => reg.GetReg(); }
         //get robot info from numregs
         public string[] getRobotInfo { get => reg.RobotInfo(robotName, hostName, job, ofJob); }
+        */
 
         public void refreshPrompt()
         {
@@ -410,17 +411,19 @@ namespace Inrotech.Domain.Components.Robot
             //TESTDATA FORMATTING
             //Numregs
             strResult = strResult + "--- NumRegs ---\r\n";
-            for (int i = 0; i <= objSelectedReg.Length; i++)
+            for (int i = 0; i < objSelectedReg.Length; i++)
             {
-                if (objSelectedReg[i].GetValue(0, ref vntValue) == true)
+                for (int a = objSelectedReg[i].StartIndex; a <= objSelectedReg[i].EndIndex; a++)
                 {
-                    strResult = strResult + "R[" + selectedRegArr[i] + "] = " + vntValue + "\r\n";
+                    if (objSelectedReg[i].GetValue(a, ref vntValue) == true)
+                    {
+                        strResult = strResult + "R[" + selectedRegArr[i] + "] = " + vntValue + "\r\n";
+                    }
+                    else
+                    {
+                        strResult = strResult + "R[" + selectedRegArr[i] + "] : Error! \r\n";
+                    }
                 }
-                else
-                {
-                    strResult = strResult + "R[" + selectedRegArr[i] + "] : Error!!! \r\n";
-                }
-
             }
 
             //Tasks

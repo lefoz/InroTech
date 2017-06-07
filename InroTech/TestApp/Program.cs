@@ -12,7 +12,7 @@ namespace TestApp
         static void Main(string[] args)
         {
             //test array
-            string[] arr = new string[5];
+            string[] arr = new string[10];
             Random rnd = new Random();
             arr[0] = rnd.Next(1, 500).ToString();
             arr[1] = rnd.Next(1, 500).ToString();
@@ -28,7 +28,7 @@ namespace TestApp
 
             Robot r = new Robot();
             r.subInit(arr);
-            r. startConnect("192.168.117.40");           
+            r.startConnect("192.168.117.40");           
 
             int i = 0;
             while (true)
