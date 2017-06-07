@@ -12,10 +12,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     public class RobotController : Controller
-    {
-      //private Register RI = new ;//RegisterInterface
-      //private Taskmanager TMI = new ;//TaskmanagerInterface
-        
+    {        
         private string[] FullRegArray;
         private static string[] SelRegArray;
 
@@ -27,14 +24,11 @@ namespace WebAPI.Controllers
         [HttpGet]
         public Dictionary<string, int> Get()
         {
-            var dic = new Dictionary<string, int>();
             if (isConnect)
             {
-                //refresh locally on robot
-                dic = n.GetGraph();
                 n.refreshPrompt();
             }
-            return dic;        
+            return n.GetGraph();           
         }
 
         // GET: api/robot/value 
@@ -43,32 +37,31 @@ namespace WebAPI.Controllers
         {
             try
             {
-                string[] arr = new string[10];
-
                 n = new Robot();
-                n.subInit(arr);
-
-                int i = 0;
-                while (!n.startConnect(robotip))
-                {                    
+                n.startConnect(robotip);
+                while(n.getIsConnected == false)
+                {
+                    int i = 0;
                     //wait
                     Console.WriteLine("waiting for connect.. " + i);
                     i++;
                     System.Threading.Thread.Sleep(100);
-                }       
-                isConnect = true;
-                return true;
+                }
+                if (n.getIsConnected)
+                {
+                    isConnect = true;
+                }
             }
             catch
             {
                 Console.WriteLine("catch error");
             }
-
+            Console.Write("thou shall not pass");
             //kald til IRobot med robot ip
             //skal ikke sende kamera ip
             //skal returnere bool fra robot hvis conn.
             // for testing purpose
-            return false;
+            return n.getIsConnected;
         }
 
         [HttpGet("getarray/{id}")]
@@ -122,12 +115,12 @@ namespace WebAPI.Controllers
                 if (n.subClear())
                 {
                     isConnect = false;
-                }
+                }           
                 //init robot with string[] to define FRRJIf.DataTable size
                 //init datatables specifically for selected values
-                int i = 0;
-                while (isConnect == false)
-                {                    
+                while(isConnect == false)
+                {
+                    int i = 0;
                     //wait
                     Console.WriteLine("waiting for connection.. " + i);
                     i++;
