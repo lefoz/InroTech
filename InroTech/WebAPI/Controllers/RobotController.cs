@@ -15,6 +15,7 @@ namespace WebAPI.Controllers
     {        
         private string[] FullRegArray;
         private static string[] SelRegArray;
+        private Dictionary<string,int> dict;
 
         private Robot n;
         private bool isConnect = false;
@@ -27,8 +28,9 @@ namespace WebAPI.Controllers
             if (isConnect)
             {
                 n.refreshPrompt();
+                dict = n.GetGraph();           
             }
-            return n.GetGraph();           
+            return dict;
         }
 
         // GET: api/robot/value 
@@ -56,12 +58,11 @@ namespace WebAPI.Controllers
             {
                 Console.WriteLine("catch error");
             }
-            Console.Write("thou shall not pass");
             //kald til IRobot med robot ip
             //skal ikke sende kamera ip
             //skal returnere bool fra robot hvis conn.
             // for testing purpose
-            return n.getIsConnected;
+            return isConnect;
         }
 
         [HttpGet("getarray/{id}")]
@@ -84,11 +85,13 @@ namespace WebAPI.Controllers
             return FullRegArray;
         }
 
-        // GET api/values/#
+        // GET api/robot/#
         [HttpGet("{id}")]
         public DataTable Get(int id)
         {
-            DataTable dt;
+            DataTable dt=null;
+            if (isConnect)
+            {
             switch (id)
             {
                 case 1:
@@ -100,6 +103,7 @@ namespace WebAPI.Controllers
                 default:
                     dt = new DataTable();
                     break;
+            }
             }
             return dt;
         }
